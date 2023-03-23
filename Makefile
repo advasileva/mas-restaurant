@@ -1,5 +1,7 @@
+google-formater = find . -type f -name '*.java' | xargs java -jar libs/formatter.jar
+
 format:
-	java -jar libs/formatter.jar -i src/main/java/org/hse/bse/*.java
+	${google-formater} -i
 
 lint:
-	java -jar libs/formatter.jar --set-exit-if-changed src/main/java/org/hse/bse/*.java
+	${google-formater} --set-exit-if-changed --dry-run
