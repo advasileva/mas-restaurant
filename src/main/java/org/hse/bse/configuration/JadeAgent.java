@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface JadeAgent {
-  String value() default "";
-
-  int number() default 1;
+    String value() default "";
+    int number() default 1;
 }
