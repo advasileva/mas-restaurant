@@ -2,7 +2,7 @@
 name: build
 on: [push, pull_request]
 jobs:
-  mvn:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

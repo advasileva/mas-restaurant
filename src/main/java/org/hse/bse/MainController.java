@@ -5,13 +5,13 @@ import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
+import java.util.Objects;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import org.hse.bse.configuration.JadeAgent;
 import org.reflections.Reflections;
 
 import java.text.MessageFormat;
-import java.util.Objects;
 import java.util.Set;
 
 class MainController {
