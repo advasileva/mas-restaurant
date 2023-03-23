@@ -2,6 +2,10 @@ package org.hse.bse.configuration;
 
 import java.lang.annotation.Annotation;
 
+
+
+
+
 public class TestAgent implements JadeAgent {
   private static int counter = 0;
   private int currentNumber;
