@@ -23,10 +23,10 @@ public class TestAgent extends Agent implements JadeAgent {
     addBehaviour(new OneShotBehaviour() {
       @Override
       public void action() {
-        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-        msg.setContent("test Message");
-        msg.addReceiver(new AID("TestAgent", AID.ISLOCALNAME));
-        send(msg);
+          ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+          msg.setContent("test Message");
+          msg.addReceiver(new AID("TestAgentReceiver", AID.ISLOCALNAME));
+          send(msg);
       }
     });
   }
