@@ -7,7 +7,7 @@ import jade.lang.acl.ACLMessage;
 import javax.swing.*;
 import java.lang.annotation.Annotation;
 
-// @JadeAgent(number = 5)
+@JadeAgent(number = 5)
 public class TestAgentReceiver extends Agent implements JadeAgent {
     private static int counter = 0;
     private int currentNumber;
