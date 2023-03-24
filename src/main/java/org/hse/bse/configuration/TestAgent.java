@@ -1,8 +1,10 @@
 package org.hse.bse.configuration;
 
+import jade.core.Agent;
+
 import java.lang.annotation.Annotation;
 
-public class TestAgent implements JadeAgent {
+public class TestAgent extends Agent implements JadeAgent {
   private static int counter = 0;
   private int currentNumber;
   private int health;
