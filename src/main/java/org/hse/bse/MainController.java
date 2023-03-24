@@ -10,7 +10,6 @@ import jade.wrapper.StaleProxyException;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.Set;
-
 import org.hse.bse.configuration.JadeAgent;
 import org.reflections.Reflections;
 
