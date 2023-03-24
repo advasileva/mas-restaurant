@@ -5,10 +5,8 @@ import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.lang.annotation.Annotation;
-
 @JadeAgent(number = 5)
-public class TestAgent extends Agent implements JadeAgent {
+public class TestAgent extends Agent {
   private static int counter = 0;
   private int currentNumber;
   private int health;
@@ -20,15 +18,16 @@ public class TestAgent extends Agent implements JadeAgent {
 
   @Override
   protected void setup() {
-    addBehaviour(new OneShotBehaviour() {
-      @Override
-      public void action() {
-          ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-          msg.setContent("test Message");
-          msg.addReceiver(new AID("TestAgentReceiver", AID.ISLOCALNAME));
-          send(msg);
-      }
-    });
+    addBehaviour(
+        new OneShotBehaviour() {
+          @Override
+          public void action() {
+            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+            msg.setContent("test Message");
+            msg.addReceiver(new AID("TestAgentReceiver", AID.ISLOCALNAME));
+            send(msg);
+          }
+        });
   }
 
   public int getHealth() {
@@ -45,10 +44,5 @@ public class TestAgent extends Agent implements JadeAgent {
 
   public int number() {
     return currentNumber;
-  }
-
-  @Override
-  public Class<? extends Annotation> annotationType() {
-    return null;
   }
 }
