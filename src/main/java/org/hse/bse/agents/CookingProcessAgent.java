@@ -12,6 +12,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class CookingProcessAgent extends Agent {
@@ -61,10 +63,9 @@ public class CookingProcessAgent extends Agent {
             ACLMessage msg = myAgent.receive(messageTemplate);
 
             if (msg != null) {
-              log.info("Got time request");
               ACLMessage reply = msg.createReply();
               reply.setPerformative(ACLMessage.PROPOSE);
-              reply.setContent("X hours"); // TODO set correct time
+              reply.setContent(String.valueOf(new Random().nextInt(10))); // TODO set correct time
 
               myAgent.send(reply);
             } else {

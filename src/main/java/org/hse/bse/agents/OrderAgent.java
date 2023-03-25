@@ -40,6 +40,9 @@ public class OrderAgent extends Agent {
         new Behaviour() {
           private MessageTemplate messageTemplate;
           private int step = 0;
+          private int repliesCount = 0;
+
+          private double maxTime = 0;
 
           private static final String CONVERSATION_ID = "order-time";
 
@@ -66,27 +69,23 @@ public class OrderAgent extends Agent {
               case 1:
                 ACLMessage reply = myAgent.receive(messageTemplate);
                 if (reply != null) {
-                  log.info(String.format("Got time %s", reply.getContent()));
-                  //                  String orderJson = getArguments()[0].toString();
-                  //
-                  //                  ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-                  //
-                  //                  order.addReceiver(ManagerAgent.aid);
-                  //                  order.setContent(orderJson);
-                  //                  order.setConversationId(CONVERSATION_ID);
-                  //                  order.setReplyWith("order" + System.currentTimeMillis());
-                  //
-                  //                  log.info(String.format("Requested order %s", orderJson));
-                  //
-                  //                  myAgent.send(order);
-                  //                  messageTemplate =
-                  //                          MessageTemplate.and(
-                  //
-                  // MessageTemplate.MatchConversationId(CONVERSATION_ID),
-                  //
-                  // MessageTemplate.MatchInReplyTo(order.getReplyWith()));
+                  String time = reply.getContent();
+                  log.info(String.format("Got time %s for process %s", time, reply.getSender().getName()));
 
-                  step = 2;
+                  ++repliesCount;
+                  maxTime = Math.max(maxTime, Double.parseDouble(time));
+
+                  if (repliesCount >= processes.size()) {
+                    ACLMessage cfpTimeMessage = new ACLMessage(ACLMessage.CFP);
+                    cfpTimeMessage.addReceiver(new AID(getArguments()[1].toString()));
+                    cfpTimeMessage.setConversationId(CONVERSATION_ID);
+                    cfpTimeMessage.setContent(String.valueOf(maxTime));
+                    cfpTimeMessage.setReplyWith("cfp" + System.currentTimeMillis());
+
+                    myAgent.send(cfpTimeMessage);
+
+                    step = 3;
+                  }
                 } else {
                   block();
                 }

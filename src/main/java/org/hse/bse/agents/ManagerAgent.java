@@ -93,7 +93,8 @@ public class ManagerAgent extends Agent {
                   DataProvider.parse(order)
                       .get("vis_ord_total")
                       .getAsString(); // TODO this is not id
-              MainController.addAgent(OrderAgent.class, id, new Object[] {order});
+              MainController.addAgent(
+                  OrderAgent.class, id, new Object[] {order, msg.getSender().getName()});
               // TODO cutomize OrderAgent
             } else {
               block();
