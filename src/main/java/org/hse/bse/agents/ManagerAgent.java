@@ -2,6 +2,7 @@ package org.hse.bse.agents;
 
 import static jade.util.ObjectManager.AGENT_TYPE;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
@@ -10,20 +11,31 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.util.logging.Logger;
 import org.hse.bse.configuration.JadeAgent;
+import org.hse.bse.utils.Data;
+import org.hse.bse.utils.DataProvider;
 
 @JadeAgent(number = 1)
 public class ManagerAgent extends Agent {
+  private final Logger log = Logger.getLogger(this.getClass().getName());
+
+  public static final String AGENT_TYPE = "book-selling";
+
+  public static AID aid;
 
   @Override
   protected void setup() {
+    log.info(String.format("Init %s", getAID().getName()));
+
+    this.aid = getAID();
 
     DFAgentDescription agentDescription = new DFAgentDescription();
     agentDescription.setName(getAID());
 
     ServiceDescription serviceDescription = new ServiceDescription();
     serviceDescription.setType(AGENT_TYPE);
-    serviceDescription.setName("JADE-book-trading");
+    serviceDescription.setName("JADE-order");
 
     agentDescription.addServices(serviceDescription);
 
@@ -33,20 +45,42 @@ public class ManagerAgent extends Agent {
       ex.printStackTrace();
     }
 
-    System.out.println("Init manager " + getAID().getName() + "");
     addBehaviour(
-        new CyclicBehaviour(this) {
+        new CyclicBehaviour() {
+          @Override
+          public void action() {
+            MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
+            ACLMessage msg = myAgent.receive(messageTemplate);
+
+            if (msg != null) {
+              ACLMessage reply = msg.createReply();
+              reply.setPerformative(ACLMessage.PROPOSE);
+              reply.setContent(DataProvider.read(Data.menuDishes));
+
+              myAgent.send(reply);
+            } else {
+              block();
+            }
+          }
+        });
+    addBehaviour(
+        new CyclicBehaviour() {
           @Override
           public void action() {
             MessageTemplate messageTemplate =
                 MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
             ACLMessage msg = myAgent.receive(messageTemplate);
-            if (msg != null) {
-              String title = msg.getContent();
-              ACLMessage reply = msg.createReply();
 
+            if (msg != null) {
+              String dishes = msg.getContent();
+              ACLMessage reply = msg.createReply();
               reply.setPerformative(ACLMessage.INFORM);
-              System.out.println(title + " sold to agent " + msg.getSender().getName());
+
+              log.info(String.format("Received order for dishes: %s", dishes));
+
+              myAgent.send(reply);
+            } else {
+              block();
             }
           }
         });
@@ -56,10 +90,10 @@ public class ManagerAgent extends Agent {
   protected void takeDown() {
     try {
       DFService.deregister(this);
-    } catch (FIPAException fe) {
-      fe.printStackTrace();
+    } catch (FIPAException exc) {
+      exc.printStackTrace();
     }
 
-    System.out.println("Terminate manager: " + getAID().getName());
+    log.info(String.format("Terminate %s", getAID().getName()));
   }
 }
