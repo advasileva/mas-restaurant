@@ -5,7 +5,6 @@ import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
-@JadeAgent(number = 5)
 public class TestAgent extends Agent {
   private static int counter = 0;
   private int currentNumber;

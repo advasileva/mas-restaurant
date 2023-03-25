@@ -5,7 +5,6 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import javax.swing.*;
 
-@JadeAgent(number = 5)
 public class TestAgentReceiver extends Agent {
   private static int counter = 0;
   private int currentNumber;
