@@ -68,18 +68,21 @@ public class VisitorAgent extends Agent {
                         MessageTemplate.MatchConversationId(CONVERSATION_ID),
                         MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
 
+                myAgent.send(cfpMessage);
+
                 step = 1;
                 break;
               case 1:
                 ACLMessage reply = myAgent.receive(messageTemplate);
                 if (reply != null) {
-                  if (reply.getPerformative() == ACLMessage.PROPOSE) {
-                    int price = Integer.parseInt(reply.getContent());
-                    if (bestSeller == null || price < bestPrice) {
-                      bestPrice = price;
-                      bestSeller = reply.getSender();
-                    }
-                  }
+                    log.info(String.format("Got response %s", reply.getContent()));
+//                  if (reply.getPerformative() == ACLMessage.PROPOSE) {
+//                    int price = Integer.parseInt(reply.getContent());
+//                    if (bestSeller == null || price < bestPrice) {
+//                      bestPrice = price;
+//                      bestSeller = reply.getSender();
+//                    }
+//                  }
 
                   ++repliesCount;
 

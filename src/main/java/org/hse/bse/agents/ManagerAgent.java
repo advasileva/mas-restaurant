@@ -5,6 +5,7 @@ import static jade.util.ObjectManager.AGENT_TYPE;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -13,12 +14,14 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.logging.Logger;
 import org.hse.bse.configuration.JadeAgent;
+import org.hse.bse.utils.Data;
+import org.hse.bse.utils.DataProvider;
 
 @JadeAgent(number = 1)
 public class ManagerAgent extends Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
-  public static final String AGENT_TYPE = "manager";
+  public static final String AGENT_TYPE = "book-selling";
 
   public static AID aid;
 
@@ -44,12 +47,12 @@ public class ManagerAgent extends Agent {
     }
 
     addBehaviour(
-        new CyclicBehaviour(this) {
+            new CyclicBehaviour() {
           @Override
           public void action() {
             MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
             ACLMessage msg = myAgent.receive(messageTemplate);
-//            log.info("Got msg " + msg);
+            log.info("Got msg " + msg);
 
             if (msg != null) {
               String title = msg.getContent();
@@ -57,14 +60,12 @@ public class ManagerAgent extends Agent {
               ACLMessage reply = msg.createReply();
 
               Integer price = 1;
-              if (price != null) {
-                reply.setPerformative(ACLMessage.PROPOSE);
-                reply.setContent("not-available");
-              }
+              reply.setPerformative(ACLMessage.PROPOSE);
+              reply.setContent(DataProvider.read(Data.menuDishes).toString());
 
               myAgent.send(reply);
             } else {
-//              block();
+              block();
             }
           }
         });
