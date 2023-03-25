@@ -10,12 +10,9 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import java.util.*;
 import java.util.logging.Logger;
-import org.hse.bse.configuration.JadeAgent;
 import org.hse.bse.utils.DataProvider;
 
-@JadeAgent(number = 5)
 public class VisitorAgent extends Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -38,7 +35,6 @@ public class VisitorAgent extends Agent {
 
           @Override
           public void action() {
-            log.info("Start action");
             switch (step) {
               case 0:
                 ACLMessage cfpMessage = new ACLMessage(ACLMessage.CFP);
@@ -52,30 +48,26 @@ public class VisitorAgent extends Agent {
                         MessageTemplate.MatchConversationId(CONVERSATION_ID),
                         MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
 
+                log.info("Requested menu");
                 step = 1;
                 break;
               case 1:
                 ACLMessage reply = myAgent.receive(messageTemplate);
                 if (reply != null) {
-                  log.info("Got menu");
-
                   JsonObject menu = DataProvider.parse(reply.getContent());
                   JsonArray dishes = menu.get("menu_dishes").getAsJsonArray();
-                  String selectedId =
-                      dishes
-                          .get(new Random().nextInt(dishes.size()))
-                          .getAsJsonObject()
-                          .get("menu_dish_id")
-                          .toString();
+
+                  log.info(String.format("Got menu with %d dishes", dishes.size()));
+                  String orderJson = getArguments()[0].toString();
 
                   ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 
                   order.addReceiver(ManagerAgent.aid);
-                  order.setContent(selectedId);
+                  order.setContent(orderJson);
                   order.setConversationId(CONVERSATION_ID);
                   order.setReplyWith("order" + System.currentTimeMillis());
 
-                  log.info(String.format("Requested order with dish id %s", selectedId));
+                  log.info(String.format("Requested order %s", orderJson));
 
                   myAgent.send(order);
                   messageTemplate =
@@ -88,12 +80,26 @@ public class VisitorAgent extends Agent {
                   block();
                 }
                 break;
+
+              case 2:
+                MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
+                ACLMessage msg = myAgent.receive(messageTemplate);
+
+                if (msg != null) {
+                  log.info(
+                      String.format(
+                          "Got time %s for order %s", msg.getContent(), msg.getSender().getName()));
+                  step = 3;
+                } else {
+                  block();
+                }
+                break;
             }
           }
 
           @Override
           public boolean done() {
-            return step == 2;
+            return step == 3;
           }
         });
   }

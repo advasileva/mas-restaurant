@@ -9,6 +9,10 @@ import java.nio.file.Path;
 public class DataProvider {
   private static Path resources = Path.of("src", "main", "resources");
 
+  public static JsonObject readAsJson(Data data) {
+    return parse(read(data));
+  }
+
   public static String read(Data data) {
     try {
       return Files.readString(resources.resolve(data.getFilename()));

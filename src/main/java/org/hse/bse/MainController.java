@@ -1,6 +1,5 @@
 package org.hse.bse;
 
-import jade.core.Agent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -8,14 +7,11 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import java.text.MessageFormat;
-import java.util.Objects;
-import java.util.Set;
-import org.hse.bse.configuration.JadeAgent;
-import org.reflections.Reflections;
+import org.hse.bse.agents.ManagerAgent;
 
-class MainController {
+public class MainController {
 
-  private final ContainerController containerController;
+  private static ContainerController containerController;
 
   public MainController() {
     final Runtime rt = Runtime.instance();
@@ -28,48 +24,20 @@ class MainController {
     containerController = rt.createMainContainer(p);
   }
 
-  void initAgents() {
-    initAgents(MainController.class.getPackageName());
+  void start() {
+    addAgent(ManagerAgent.class, "", null);
   }
 
-  void initAgents(String basePackage) {
-    final Reflections reflections = new Reflections(basePackage);
-
-    final Set<Class<?>> allClasses = reflections.getTypesAnnotatedWith(JadeAgent.class);
+  public static String addAgent(Class<?> clazz, String suffix, Object[] args) {
     try {
-      for (Class<?> clazz : allClasses) {
-        if (Agent.class.isAssignableFrom(clazz)) {
-          configureAgent(clazz);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+      AgentController agent =
+          containerController.createNewAgent(
+              MessageFormat.format("{0}{1}", clazz.getSimpleName(), suffix), clazz.getName(), args);
+      agent.start();
+      return agent.getName();
+    } catch (StaleProxyException ex) {
+      ex.printStackTrace(); // I prefer ff
     }
-  }
-
-  private void configureAgent(Class<?> clazz) throws StaleProxyException {
-    final JadeAgent jadeAgent = clazz.getAnnotation(JadeAgent.class);
-
-    if (jadeAgent.number() <= 0) {
-      throw new IllegalStateException(
-          MessageFormat.format(
-              "Number of agent {0} is less then 1. Real number is {1}",
-              clazz.getName(), jadeAgent.number()));
-    }
-
-    final String agentName =
-        !Objects.equals(jadeAgent.value(), "") ? jadeAgent.value() : clazz.getSimpleName();
-
-    if (jadeAgent.number() == 1) {
-      createAgent(clazz, agentName).start();
-    } else {
-      for (int i = 0; i < jadeAgent.number(); ++i) {
-        createAgent(clazz, MessageFormat.format("{0}{1}", agentName, i)).start();
-      }
-    }
-  }
-
-  private AgentController createAgent(Class<?> clazz, String agentName) throws StaleProxyException {
-    return containerController.createNewAgent(agentName, clazz.getName(), null);
+    return "";
   }
 }
