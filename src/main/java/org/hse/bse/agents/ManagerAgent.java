@@ -2,6 +2,7 @@ package org.hse.bse.agents;
 
 import static jade.util.ObjectManager.AGENT_TYPE;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
@@ -10,13 +11,22 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.util.logging.Logger;
 import org.hse.bse.configuration.JadeAgent;
 
 @JadeAgent(number = 1)
 public class ManagerAgent extends Agent {
+  private final Logger log = Logger.getLogger(this.getClass().getName());
+
+  public static final String AGENT_TYPE = "manager";
+
+  public static AID aid;
 
   @Override
   protected void setup() {
+    log.info(String.format("Init %s", getAID().getName()));
+
+    this.aid = getAID();
 
     DFAgentDescription agentDescription = new DFAgentDescription();
     agentDescription.setName(getAID());
@@ -33,20 +43,28 @@ public class ManagerAgent extends Agent {
       ex.printStackTrace();
     }
 
-    System.out.println("Init manager " + getAID().getName() + "");
     addBehaviour(
         new CyclicBehaviour(this) {
           @Override
           public void action() {
-            MessageTemplate messageTemplate =
-                MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
             ACLMessage msg = myAgent.receive(messageTemplate);
+//            log.info("Got msg " + msg);
+
             if (msg != null) {
               String title = msg.getContent();
+              log.info("Got request " + title);
               ACLMessage reply = msg.createReply();
 
-              reply.setPerformative(ACLMessage.INFORM);
-              System.out.println(title + " sold to agent " + msg.getSender().getName());
+              Integer price = 1;
+              if (price != null) {
+                reply.setPerformative(ACLMessage.PROPOSE);
+                reply.setContent("not-available");
+              }
+
+              myAgent.send(reply);
+            } else {
+//              block();
             }
           }
         });
@@ -56,10 +74,10 @@ public class ManagerAgent extends Agent {
   protected void takeDown() {
     try {
       DFService.deregister(this);
-    } catch (FIPAException fe) {
-      fe.printStackTrace();
+    } catch (FIPAException exc) {
+      exc.printStackTrace();
     }
 
-    System.out.println("Terminate manager: " + getAID().getName());
+    log.info(String.format("Terminate %s", getAID().getName()));
   }
 }
