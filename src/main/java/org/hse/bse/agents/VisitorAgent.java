@@ -38,7 +38,6 @@ public class VisitorAgent extends Agent {
 
           @Override
           public void action() {
-            log.info("Start action");
             switch (step) {
               case 0:
                 ACLMessage cfpMessage = new ACLMessage(ACLMessage.CFP);
@@ -52,6 +51,7 @@ public class VisitorAgent extends Agent {
                         MessageTemplate.MatchConversationId(CONVERSATION_ID),
                         MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
 
+                log.info("Requested menu");
                 step = 1;
                 break;
               case 1:

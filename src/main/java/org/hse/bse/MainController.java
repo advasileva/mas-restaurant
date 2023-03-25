@@ -9,13 +9,14 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import java.text.MessageFormat;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import org.hse.bse.configuration.JadeAgent;
 import org.reflections.Reflections;
 
-class MainController {
+public class MainController {
 
-  private final ContainerController containerController;
+  private static ContainerController containerController;
 
   public MainController() {
     final Runtime rt = Runtime.instance();
@@ -71,5 +72,15 @@ class MainController {
 
   private AgentController createAgent(Class<?> clazz, String agentName) throws StaleProxyException {
     return containerController.createNewAgent(agentName, clazz.getName(), null);
+  }
+
+  public static void addAgents(Class<?> clazz, int number) {
+    for (int i = 0; i < number; ++i) {
+      try {
+        containerController.createNewAgent(MessageFormat.format("{0}{1}", clazz.getSimpleName(), new Random().nextInt()), clazz.getName(), null).start();
+      } catch (StaleProxyException ex) {
+        ex.printStackTrace();
+      }
+    };
   }
 }

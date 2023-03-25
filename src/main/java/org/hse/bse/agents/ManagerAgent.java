@@ -9,6 +9,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.util.logging.Logger;
+import org.hse.bse.MainController;
 import org.hse.bse.configuration.JadeAgent;
 import org.hse.bse.utils.Data;
 import org.hse.bse.utils.DataProvider;
@@ -19,7 +21,7 @@ import java.util.logging.Logger;
 public class ManagerAgent extends Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
-  public static final String AGENT_TYPE = "book-selling";
+  public static final String AGENT_TYPE = "manager";
 
   public static AID aid;
 
@@ -78,6 +80,8 @@ public class ManagerAgent extends Agent {
               log.info(String.format("Received order for dishes: %s", dishes));
 
               myAgent.send(reply);
+
+              MainController.addAgents(OrderAgent.class, 1);
             } else {
               block();
             }
