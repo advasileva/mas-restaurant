@@ -3,8 +3,6 @@ package org.hse.bse.configuration;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
-import org.hse.bse.configuration.JadeAgent;
-
 import javax.swing.*;
 
 @JadeAgent(number = 5)
