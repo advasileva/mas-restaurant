@@ -5,7 +5,6 @@ import static jade.util.ObjectManager.AGENT_TYPE;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -36,7 +35,7 @@ public class ManagerAgent extends Agent {
 
     ServiceDescription serviceDescription = new ServiceDescription();
     serviceDescription.setType(AGENT_TYPE);
-    serviceDescription.setName("JADE-book-trading");
+    serviceDescription.setName("JADE-order");
 
     agentDescription.addServices(serviceDescription);
 
@@ -47,21 +46,37 @@ public class ManagerAgent extends Agent {
     }
 
     addBehaviour(
-            new CyclicBehaviour() {
+        new CyclicBehaviour() {
           @Override
           public void action() {
             MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
             ACLMessage msg = myAgent.receive(messageTemplate);
-            log.info("Got msg " + msg);
 
             if (msg != null) {
-              String title = msg.getContent();
-              log.info("Got request " + title);
               ACLMessage reply = msg.createReply();
-
-              Integer price = 1;
               reply.setPerformative(ACLMessage.PROPOSE);
-              reply.setContent(DataProvider.read(Data.menuDishes).toString());
+              reply.setContent(DataProvider.read(Data.menuDishes));
+
+              myAgent.send(reply);
+            } else {
+              block();
+            }
+          }
+        });
+    addBehaviour(
+        new CyclicBehaviour() {
+          @Override
+          public void action() {
+            MessageTemplate messageTemplate =
+                MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            ACLMessage msg = myAgent.receive(messageTemplate);
+
+            if (msg != null) {
+              String dishes = msg.getContent();
+              ACLMessage reply = msg.createReply();
+              reply.setPerformative(ACLMessage.INFORM);
+
+              log.info(String.format("Received order for dishes: %s", dishes));
 
               myAgent.send(reply);
             } else {
