@@ -17,7 +17,6 @@ import org.hse.bse.MainController;
 import org.hse.bse.utils.DataProvider;
 
 public class OrderAgent extends Agent {
-  public static int count = 0;
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private final Map<String, AID> processes = new HashMap<>();
@@ -27,14 +26,9 @@ public class OrderAgent extends Agent {
   protected void setup() {
     log.info(String.format("Init %s", getAID().getName()));
 
-    initProcesses();
+    MainController.registerService(this, AGENT_TYPE);
 
-    //    DFAgentDescription template = new DFAgentDescription();
-    //    ServiceDescription serviceDescription = new ServiceDescription();
-    //
-    //    serviceDescription.setType(CookingProcessAgent.AGENT_TYPE);
-    ////    serviceDescription.setName(processes.get(0));
-    //    template.addServices(serviceDescription);
+    initProcesses();
 
     addBehaviour(
         new Behaviour() {
@@ -126,6 +120,5 @@ public class OrderAgent extends Agent {
                 MainController.addAgent(CookingProcessAgent.class, dishId, new Object[] {dish})));
       }
     }
-    log.info(String.format("Processes %d", processes.size()));
   }
 }

@@ -5,12 +5,11 @@ import com.google.gson.JsonObject;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.logging.Logger;
+import org.hse.bse.MainController;
 import org.hse.bse.utils.DataProvider;
 
 public class VisitorAgent extends Agent {
@@ -20,11 +19,7 @@ public class VisitorAgent extends Agent {
   protected void setup() {
     log.info(String.format("Init %s", getAID().getName()));
 
-    DFAgentDescription template = new DFAgentDescription();
-    ServiceDescription serviceDescription = new ServiceDescription();
-
-    serviceDescription.setType(ManagerAgent.AGENT_TYPE);
-    template.addServices(serviceDescription);
+    MainController.registerService(this, ManagerAgent.AGENT_TYPE);
 
     addBehaviour(
         new Behaviour() {

@@ -7,8 +7,6 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -35,23 +33,9 @@ public class ManagerAgent extends Agent {
     log.info(String.format("Init %s", getAID().getName()));
 
     aid = getAID();
+    MainController.registerService(this, AGENT_TYPE);
 
     initAgents();
-
-    DFAgentDescription agentDescription = new DFAgentDescription();
-    agentDescription.setName(getAID());
-
-    ServiceDescription serviceDescription = new ServiceDescription();
-    serviceDescription.setType(AGENT_TYPE);
-    serviceDescription.setName("JADE-order");
-
-    agentDescription.addServices(serviceDescription);
-
-    try {
-      DFService.register(this, agentDescription);
-    } catch (FIPAException ex) {
-      ex.printStackTrace();
-    }
 
     addBehaviour(
         new CyclicBehaviour() {
@@ -89,13 +73,14 @@ public class ManagerAgent extends Agent {
 
               myAgent.send(reply);
 
+              // Добавить получение продуктов на складе, иначе не создавать заказ
+
               String id =
                   DataProvider.parse(order)
                       .get("vis_ord_total")
                       .getAsString(); // TODO this is not id
               MainController.addAgent(
                   OrderAgent.class, id, new Object[] {order, msg.getSender().getName()});
-              // TODO cutomize OrderAgent
             } else {
               block();
             }
@@ -116,6 +101,7 @@ public class ManagerAgent extends Agent {
 
   private void initAgents() {
     initVisitors();
+    initStore();
   }
 
   private void initVisitors() {
@@ -130,5 +116,14 @@ public class ManagerAgent extends Agent {
             MainController.addAgent(VisitorAgent.class, visitorName, new Object[] {order}));
       }
     }
+  }
+
+  private void initStore() {
+    MainController.addAgent(
+        StoreAgent.class,
+        "",
+        new Object[] {
+          DataProvider.read(Data.productTypes), DataProvider.read(Data.products),
+        });
   }
 }

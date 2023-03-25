@@ -1,8 +1,11 @@
 package org.hse.bse;
 
-import jade.core.Profile;
-import jade.core.ProfileImpl;
+import jade.core.*;
 import jade.core.Runtime;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
@@ -39,5 +42,22 @@ public class MainController {
       ex.printStackTrace(); // I prefer ff
     }
     return "";
+  }
+
+  public static void registerService(Agent agent, String type) {
+    DFAgentDescription agentDescription = new DFAgentDescription();
+    agentDescription.setName(agent.getAID());
+
+    ServiceDescription serviceDescription = new ServiceDescription();
+    serviceDescription.setType(type);
+    serviceDescription.setName(agent.getName());
+
+    agentDescription.addServices(serviceDescription);
+
+    try {
+      DFService.register(agent, agentDescription);
+    } catch (FIPAException ex) {
+      ex.printStackTrace();
+    }
   }
 }
