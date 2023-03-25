@@ -3,10 +3,10 @@ package org.hse.bse;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import java.text.MessageFormat;
-import java.util.Random;
 import org.hse.bse.agents.ManagerAgent;
 
 public class MainController {
@@ -25,23 +25,19 @@ public class MainController {
   }
 
   void start() {
-    addAgents(ManagerAgent.class, 1);
+    addAgent(ManagerAgent.class, "", null);
   }
 
-  public static void addAgents(Class<?> clazz, int number) {
-    for (int i = 0; i < number; ++i) {
-      try {
-        containerController
-            .createNewAgent(
-                MessageFormat.format(
-                    "{0}{1}", clazz.getSimpleName(), new Random().nextInt(1000)),
-                clazz.getName(),
-                null)
-            .start(); // TODO fix ids
-      } catch (StaleProxyException ex) {
-        ex.printStackTrace();
-      }
+  public static String addAgent(Class<?> clazz, String suffix, Object[] args) {
+    try {
+      AgentController agent =
+          containerController.createNewAgent(
+              MessageFormat.format("{0}{1}", clazz.getSimpleName(), suffix), clazz.getName(), args);
+      agent.start();
+      return agent.getName();
+    } catch (StaleProxyException ex) {
+      ex.printStackTrace();
     }
-    ;
+    return "";
   }
 }

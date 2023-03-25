@@ -55,25 +55,20 @@ public class VisitorAgent extends Agent {
               case 1:
                 ACLMessage reply = myAgent.receive(messageTemplate);
                 if (reply != null) {
-                  log.info("Got menu");
-
                   JsonObject menu = DataProvider.parse(reply.getContent());
                   JsonArray dishes = menu.get("menu_dishes").getAsJsonArray();
-                  String selectedId =
-                      dishes
-                          .get(new Random().nextInt(dishes.size()))
-                          .getAsJsonObject()
-                          .get("menu_dish_id")
-                          .toString();
+
+                  log.info(String.format("Got menu with %d dishes", dishes.size()));
+                  String orderJson = getArguments()[0].toString();
 
                   ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 
                   order.addReceiver(ManagerAgent.aid);
-                  order.setContent(selectedId);
+                  order.setContent(orderJson);
                   order.setConversationId(CONVERSATION_ID);
                   order.setReplyWith("order" + System.currentTimeMillis());
 
-                  log.info(String.format("Requested order with dish id %s", selectedId));
+                  log.info(String.format("Requested order %s", orderJson));
 
                   myAgent.send(order);
                   messageTemplate =

@@ -1,5 +1,8 @@
 package org.hse.bse.agents;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -9,6 +12,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import org.hse.bse.MainController;
 import org.hse.bse.configuration.JadeAgent;
@@ -18,6 +23,8 @@ import org.hse.bse.utils.DataProvider;
 @JadeAgent(number = 1)
 public class ManagerAgent extends Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
+
+  private final Map<String, String> visitors = new HashMap<>();
 
   public static final String AGENT_TYPE = "manager";
 
@@ -73,15 +80,19 @@ public class ManagerAgent extends Agent {
             ACLMessage msg = myAgent.receive(messageTemplate);
 
             if (msg != null) {
-              String dishes = msg.getContent();
+              String order = msg.getContent();
               ACLMessage reply = msg.createReply();
               reply.setPerformative(ACLMessage.INFORM);
 
-              log.info(String.format("Received order for dishes: %s", dishes));
+              log.info(String.format("Received order: %s", order));
 
               myAgent.send(reply);
 
-              MainController.addAgents(OrderAgent.class, 1);
+              String id =
+                  DataProvider.parse(order)
+                      .get("vis_ord_total")
+                      .getAsString(); // TODO this is not id
+              MainController.addAgent(OrderAgent.class, id, new Object[] {order});
             } else {
               block();
             }
@@ -101,6 +112,20 @@ public class ManagerAgent extends Agent {
   }
 
   private void initAgents() {
-    MainController.addAgents(VisitorAgent.class, 5);
+    initVisitors();
+  }
+
+  private void initVisitors() {
+    JsonArray orders =
+        DataProvider.readAsJson(Data.visitorsOrders).getAsJsonArray("visitors_orders");
+    for (JsonElement order : orders) {
+      String visitorName = ((JsonObject) order).get("vis_name").getAsString();
+      if (!visitors.containsKey(visitorName)) {
+        log.info(String.format("Add visitor with name %s", visitorName));
+        visitors.put(
+            visitorName,
+            MainController.addAgent(VisitorAgent.class, visitorName, new Object[] {order}));
+      }
+    }
   }
 }
