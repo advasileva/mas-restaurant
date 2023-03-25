@@ -12,10 +12,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.*;
 import java.util.logging.Logger;
-import org.hse.bse.configuration.JadeAgent;
 import org.hse.bse.utils.DataProvider;
 
-@JadeAgent(number = 5)
 public class VisitorAgent extends Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 

@@ -15,8 +15,6 @@ import org.hse.bse.configuration.JadeAgent;
 import org.hse.bse.utils.Data;
 import org.hse.bse.utils.DataProvider;
 
-import java.util.logging.Logger;
-
 @JadeAgent(number = 1)
 public class ManagerAgent extends Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
@@ -30,6 +28,8 @@ public class ManagerAgent extends Agent {
     log.info(String.format("Init %s", getAID().getName()));
 
     this.aid = getAID();
+
+    initAgents();
 
     DFAgentDescription agentDescription = new DFAgentDescription();
     agentDescription.setName(getAID());
@@ -98,5 +98,9 @@ public class ManagerAgent extends Agent {
     }
 
     log.info(String.format("Terminate %s", getAID().getName()));
+  }
+
+  private void initAgents() {
+    MainController.addAgents(VisitorAgent.class, 5);
   }
 }
