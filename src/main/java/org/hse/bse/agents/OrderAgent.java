@@ -70,7 +70,9 @@ public class OrderAgent extends Agent {
                 ACLMessage reply = myAgent.receive(messageTemplate);
                 if (reply != null) {
                   String time = reply.getContent();
-                  log.info(String.format("Got time %s for process %s", time, reply.getSender().getName()));
+                  log.info(
+                      String.format(
+                          "Got time %s for process %s", time, reply.getSender().getName()));
 
                   ++repliesCount;
                   maxTime = Math.max(maxTime, Double.parseDouble(time));
