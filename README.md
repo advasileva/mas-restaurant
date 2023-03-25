@@ -1,10 +1,13 @@
 # Restaurant
 
-Melnikov Igor && Vasileva Alena, BSE218
+Igor Melnikov && Alena Vasileva, BSE218
 
-## Architecture
+## How it works
 
-TBA
+In simple words :)
+
+Each `VisitorAgent` receives a menu from the `ManagerAgent`,
+chooses a random dish and requests the creation of an order.
 
 ## Usage
 
