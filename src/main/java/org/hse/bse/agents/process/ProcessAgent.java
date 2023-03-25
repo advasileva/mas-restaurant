@@ -1,9 +1,6 @@
-package org.hse.bse.agents;
-
-import static jade.util.ObjectManager.AGENT_TYPE;
+package org.hse.bse.agents.process;
 
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
@@ -15,8 +12,9 @@ import jade.lang.acl.MessageTemplate;
 import java.util.Random;
 import java.util.logging.Logger;
 
-public class CookingProcessAgent extends Agent {
+public class ProcessAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
+
   private boolean used = true;
 
   public static final String AGENT_TYPE = "process";

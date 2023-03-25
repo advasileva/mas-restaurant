@@ -1,8 +1,7 @@
-package org.hse.bse.agents;
+package org.hse.bse.agents.equipment;
 
 import static jade.util.ObjectManager.AGENT_TYPE;
 
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -10,9 +9,9 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
-public class ChefAgent extends Agent {
-  private int chef_type_id;
-  private String chef_type_name;
+public class EquipmentAgent extends jade.core.Agent {
+  private int equip_type_id;
+  private String equip_type_name;
   private boolean used = false;
 
   @Override
@@ -21,11 +20,9 @@ public class ChefAgent extends Agent {
     agentDescription.setName(getAID());
     ServiceDescription serviceDescription = new ServiceDescription();
     serviceDescription.setType(AGENT_TYPE);
-    serviceDescription.setName("bob");
-
+    serviceDescription.setName("knife");
     agentDescription.addServices(serviceDescription);
-
-    System.out.println("Init chef " + getAID().getName() + "");
+    System.out.println("Init equipment " + getAID().getName() + "");
     addBehaviour(
         new CyclicBehaviour(this) {
           @Override
@@ -62,6 +59,6 @@ public class ChefAgent extends Agent {
       fe.printStackTrace();
     }
 
-    System.out.println("Terminate chef: " + getAID().getName());
+    System.out.println("Terminate equipment: " + getAID().getName());
   }
 }
