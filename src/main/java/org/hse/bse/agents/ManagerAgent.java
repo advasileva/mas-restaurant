@@ -1,7 +1,5 @@
 package org.hse.bse.agents;
 
-import static jade.util.ObjectManager.AGENT_TYPE;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -11,10 +9,11 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import java.util.logging.Logger;
 import org.hse.bse.configuration.JadeAgent;
 import org.hse.bse.utils.Data;
 import org.hse.bse.utils.DataProvider;
+
+import java.util.logging.Logger;
 
 @JadeAgent(number = 1)
 public class ManagerAgent extends Agent {

@@ -7,14 +7,13 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 import static jade.util.ObjectManager.AGENT_TYPE;
 
 public class EquipmentAgent extends Agent {
     private int equip_type_id;
     private String equip_type_name;
-    private boolean used = true;
+    private boolean used = false;
 
     @Override
     protected void setup() {
@@ -37,19 +36,15 @@ public class EquipmentAgent extends Agent {
                 new CyclicBehaviour(this) {
                     @Override
                     public void action() {
-                        MessageTemplate messageTemplate =
-                                MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                        ACLMessage msg = myAgent.receive(messageTemplate);
+                        ACLMessage msg = myAgent.receive();
                         if (msg != null) {
                             String title = msg.getContent();
-
-                            System.out.println("title: " + title);
-                            if (title == "using") {
+                            if (title.equals("using")) {
                                 if (used) {
                                     System.out.println(getName() + " is already used!");
                                 } else {
                                     used = true;
-                                    System.out.println(title + " reserved by " + msg.getSender().getName());
+                                    System.out.println(getName() + " reserved by " + msg.getSender().getName());
                                 }
                             } else {
                                 used = false;
