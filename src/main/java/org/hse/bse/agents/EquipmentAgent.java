@@ -1,5 +1,7 @@
 package org.hse.bse.agents;
 
+import static jade.util.ObjectManager.AGENT_TYPE;
+
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
@@ -8,9 +10,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
-import static jade.util.ObjectManager.AGENT_TYPE;
-
 public class EquipmentAgent extends Agent {
+<<<<<<< HEAD
     private int equip_type_id;
     private String equip_type_name;
     private boolean used = false;
@@ -22,15 +23,23 @@ public class EquipmentAgent extends Agent {
         ServiceDescription serviceDescription = new ServiceDescription();
         serviceDescription.setType(AGENT_TYPE);
         serviceDescription.setName("knife");
+=======
+  private int equip_type_id;
+  private String equip_type_name;
+  private boolean used = true;
+>>>>>>> b96d1af1cc162b5369a26dfd4831489c7c6e717e
 
-        agentDescription.addServices(serviceDescription);
+  @Override
+  protected void setup() {
+    DFAgentDescription agentDescription = new DFAgentDescription();
+    agentDescription.setName(getAID());
+    ServiceDescription serviceDescription = new ServiceDescription();
+    serviceDescription.setType(AGENT_TYPE);
+    serviceDescription.setName("knife");
 
-        try {
-            DFService.register(this, agentDescription);
-        } catch (FIPAException ex) {
-            ex.printStackTrace();
-        }
+    agentDescription.addServices(serviceDescription);
 
+<<<<<<< HEAD
         System.out.println("Init equipment " + getAID().getName() + "");
         addBehaviour(
                 new CyclicBehaviour(this) {
@@ -49,26 +58,56 @@ public class EquipmentAgent extends Agent {
                             } else {
                                 used = false;
                             }
-
-                            ACLMessage reply = msg.createReply();
-                            reply.setPerformative(ACLMessage.INFORM);
-                        }
-                    }
-                });
+=======
+    try {
+      DFService.register(this, agentDescription);
+    } catch (FIPAException ex) {
+      ex.printStackTrace();
     }
 
-    public void setUp() {
-        setup();
+    System.out.println("Init equipment " + getAID().getName() + "");
+    addBehaviour(
+        new CyclicBehaviour(this) {
+          @Override
+          public void action() {
+            MessageTemplate messageTemplate =
+                MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            ACLMessage msg = myAgent.receive(messageTemplate);
+            if (msg != null) {
+              String title = msg.getContent();
+>>>>>>> b96d1af1cc162b5369a26dfd4831489c7c6e717e
+
+              System.out.println("title: " + title);
+              if (title == "using") {
+                if (used) {
+                  System.out.println(getName() + " is already used!");
+                } else {
+                  used = true;
+                  System.out.println(title + " reserved by " + msg.getSender().getName());
+                }
+              } else {
+                used = false;
+              }
+
+              ACLMessage reply = msg.createReply();
+              reply.setPerformative(ACLMessage.INFORM);
+            }
+          }
+        });
+  }
+
+  public void setUp() {
+    setup();
+  }
+
+  @Override
+  protected void takeDown() {
+    try {
+      DFService.deregister(this);
+    } catch (FIPAException fe) {
+      fe.printStackTrace();
     }
 
-    @Override
-    protected void takeDown() {
-        try {
-            DFService.deregister(this);
-        } catch (FIPAException fe) {
-            fe.printStackTrace();
-        }
-
-        System.out.println("Terminate equipment: " + getAID().getName());
-    }
+    System.out.println("Terminate equipment: " + getAID().getName());
+  }
 }
