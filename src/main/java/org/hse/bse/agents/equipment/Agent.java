@@ -1,8 +1,7 @@
-package org.hse.bse.agents;
+package org.hse.bse.agents.equipment;
 
 import static jade.util.ObjectManager.AGENT_TYPE;
 
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -10,7 +9,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
-public class EquipmentAgent extends Agent {
+public class Agent extends jade.core.Agent {
   private int equip_type_id;
   private String equip_type_name;
   private boolean used = false;

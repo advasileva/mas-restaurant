@@ -1,8 +1,7 @@
-package org.hse.bse.agents;
+package org.hse.bse.agents.chef;
 
 import static jade.util.ObjectManager.AGENT_TYPE;
 
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -10,7 +9,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
-public class ChefAgent extends Agent {
+public class Agent extends jade.core.Agent {
   private int chef_type_id;
   private String chef_type_name;
   private boolean used = false;

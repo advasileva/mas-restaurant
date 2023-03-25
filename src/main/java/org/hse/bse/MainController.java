@@ -10,7 +10,7 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import java.text.MessageFormat;
-import org.hse.bse.agents.ManagerAgent;
+import org.hse.bse.agents.manager.Agent;
 
 public class MainController {
 
@@ -28,7 +28,7 @@ public class MainController {
   }
 
   void start() {
-    addAgent(ManagerAgent.class, "", null);
+    addAgent(Agent.class, "", null);
   }
 
   public static String addAgent(Class<?> clazz, String suffix, Object[] args) {
@@ -44,7 +44,7 @@ public class MainController {
     return "";
   }
 
-  public static void registerService(Agent agent, String type) {
+  public static void registerService(jade.core.Agent agent, String type) {
     DFAgentDescription agentDescription = new DFAgentDescription();
     agentDescription.setName(agent.getAID());
 

@@ -1,9 +1,8 @@
-package org.hse.bse.agents;
+package org.hse.bse.agents.store;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import java.util.logging.Logger;
 import org.hse.bse.MainController;
 import org.hse.bse.utils.DataProvider;
 
-public class StoreAgent extends Agent {
+public class Agent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private final Map<String, JsonObject> productTypes = new HashMap<>();
@@ -23,7 +22,7 @@ public class StoreAgent extends Agent {
   protected void setup() {
     log.info(String.format("Init %s", getAID().getName()));
 
-    MainController.registerService(this, ManagerAgent.AGENT_TYPE);
+    MainController.registerService(this, AGENT_TYPE);
 
     initProductTypes();
     initProducts();
@@ -47,9 +46,7 @@ public class StoreAgent extends Agent {
         DataProvider.parse(getArguments()[0].toString()).getAsJsonArray("product_types");
     for (JsonElement productType : productTypesJson) {
       String productTypeId = ((JsonObject) productType).get("prod_type_id").getAsString();
-      if (!productTypes.containsKey(productTypeId)) {
-        productTypes.put(productTypeId, (JsonObject) productType);
-      }
+      productTypes.put(productTypeId, (JsonObject) productType);
     }
     log.info(String.format("Added %d product types", productTypesJson.size()));
   }
@@ -59,9 +56,7 @@ public class StoreAgent extends Agent {
         DataProvider.parse(getArguments()[1].toString()).getAsJsonArray("products");
     for (JsonElement product : productJson) {
       String productId = ((JsonObject) product).get("prod_item_id").getAsString();
-      if (!products.containsKey(productId)) {
-        products.put(productId, (JsonObject) product);
-      }
+      products.put(productId, (JsonObject) product);
     }
     log.info(String.format("Added %d products", productJson.size()));
   }
