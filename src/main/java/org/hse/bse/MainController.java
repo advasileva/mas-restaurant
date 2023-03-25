@@ -36,7 +36,7 @@ public class MainController {
       agent.start();
       return agent.getName();
     } catch (StaleProxyException ex) {
-      ex.printStackTrace();
+      ex.printStackTrace(); // I prefer ff
     }
     return "";
   }

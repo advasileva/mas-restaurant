@@ -34,7 +34,7 @@ public class ManagerAgent extends Agent {
   protected void setup() {
     log.info(String.format("Init %s", getAID().getName()));
 
-    this.aid = getAID();
+    aid = getAID();
 
     initAgents();
 
@@ -93,6 +93,7 @@ public class ManagerAgent extends Agent {
                       .get("vis_ord_total")
                       .getAsString(); // TODO this is not id
               MainController.addAgent(OrderAgent.class, id, new Object[] {order});
+              // TODO cutomize OrderAgent
             } else {
               block();
             }
