@@ -89,11 +89,6 @@ public class VisitorAgent extends Agent {
                   log.info(
                       String.format(
                           "Got time %s for order %s", msg.getContent(), msg.getSender().getName()));
-                  //                  ACLMessage msgReply = msg.createReply();
-                  //                  msgReply.setPerformative(ACLMessage.PROPOSE);
-                  //                  msgReply.setContent("X hours"); // TODO set correct time
-                  //
-                  //                  myAgent.send(msgReply);
                   step = 3;
                 } else {
                   block();
