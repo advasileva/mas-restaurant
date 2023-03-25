@@ -71,6 +71,7 @@ public class ManagerAgent extends Agent {
             }
           }
         });
+
     addBehaviour(
         new CyclicBehaviour() {
           @Override

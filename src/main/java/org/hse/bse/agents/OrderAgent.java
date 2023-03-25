@@ -5,8 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,97 +20,85 @@ public class OrderAgent extends Agent {
   public static int count = 0;
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
-  private final Map<String, String> processes = new HashMap<>();
+  private final Map<String, AID> processes = new HashMap<>();
   public static final String AGENT_TYPE = "order";
-
-  public static AID aid;
 
   @Override
   protected void setup() {
     log.info(String.format("Init %s", getAID().getName()));
 
-    Object[] args = getArguments();
-    if (args != null && args.length > 0) {
-      initProcesses();
+    initProcesses();
 
-      //      addBehaviour(new TickerBehaviour(this, 60000) {
-      //        @Override
-      //        protected void onTick() {
-      //          DFAgentDescription template = new DFAgentDescription();
-      //          ServiceDescription serviceDescription = new ServiceDescription();
-      //
-      //          serviceDescription.setType(BookSellerAgent.AGENT_TYPE);
-      //          template.addServices(serviceDescription);
-      //          try {
-      //            DFAgentDescription[] result = DFService.search(myAgent, template);
-      //
-      //            for (DFAgentDescription agentDescription: result) {
-      //              sellerAgents.add(agentDescription.getName());
-      //            }
-      //          } catch (FIPAException ex) {
-      //            ex.printStackTrace();
-      //          }
-      //
-      //          myAgent.addBehaviour(new RequestPerformer());
-      //        }
-      //      });
-    }
-
-    //    DFAgentDescription agentDescription = new DFAgentDescription();
-    //    agentDescription.setName(getAID());
-    //
+    //    DFAgentDescription template = new DFAgentDescription();
     //    ServiceDescription serviceDescription = new ServiceDescription();
-    //    serviceDescription.setType(AGENT_TYPE);
-    //    serviceDescription.setName("JADE-order");
     //
-    //    agentDescription.addServices(serviceDescription);
-    //
-    //    try {
-    //      DFService.register(this, agentDescription);
-    //    } catch (FIPAException ex) {
-    //      ex.printStackTrace();
-    //    }
-    //
-    //    addBehaviour(
-    //        new CyclicBehaviour() {
-    //          @Override
-    //          public void action() {
-    //            MessageTemplate messageTemplate =
-    // MessageTemplate.MatchPerformative(ACLMessage.CFP);
-    //            ACLMessage msg = myAgent.receive(messageTemplate);
-    //
-    //            if (msg != null) {
-    //              ACLMessage reply = msg.createReply();
-    //              reply.setPerformative(ACLMessage.PROPOSE);
-    //              reply.setContent(DataProvider.read(Data.menuDishes));
-    //
-    //              myAgent.send(reply);
-    //            } else {
-    //              block();
-    //            }
-    //          }
-    //        });
-    //        addBehaviour(
-    //            new CyclicBehaviour() {
-    //              @Override
-    //              public void action() {
-    //                MessageTemplate messageTemplate =
-    //                    MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
-    //                ACLMessage msg = myAgent.receive(messageTemplate);
-    //
-    //                if (msg != null) {
-    //                  String dishes = msg.getContent();
-    //                  ACLMessage reply = msg.createReply();
-    //                  reply.setPerformative(ACLMessage.INFORM);
-    //
-    //                  log.info(String.format("Received order for dishes: %s", dishes));
-    //
-    //                  myAgent.send(reply);
-    //                } else {
-    //                  block();
-    //                }
-    //              }
-    //            });
+    //    serviceDescription.setType(CookingProcessAgent.AGENT_TYPE);
+    ////    serviceDescription.setName(processes.get(0));
+    //    template.addServices(serviceDescription);
+
+    addBehaviour(
+        new Behaviour() {
+          private MessageTemplate messageTemplate;
+          private int step = 0;
+
+          private static final String CONVERSATION_ID = "order-time";
+
+          @Override
+          public void action() {
+            switch (step) {
+              case 0:
+                ACLMessage cfpMessage = new ACLMessage(ACLMessage.CFP);
+                for (AID process : processes.values()) {
+                  cfpMessage.addReceiver(process);
+                }
+                cfpMessage.setConversationId(CONVERSATION_ID);
+                cfpMessage.setReplyWith("cfp" + System.currentTimeMillis());
+
+                myAgent.send(cfpMessage);
+                messageTemplate =
+                    MessageTemplate.and(
+                        MessageTemplate.MatchConversationId(CONVERSATION_ID),
+                        MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
+
+                log.info("Requested time");
+                step = 1;
+                break;
+              case 1:
+                ACLMessage reply = myAgent.receive(messageTemplate);
+                if (reply != null) {
+                  log.info(String.format("Got time %s", reply.getContent()));
+                  //                  String orderJson = getArguments()[0].toString();
+                  //
+                  //                  ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+                  //
+                  //                  order.addReceiver(ManagerAgent.aid);
+                  //                  order.setContent(orderJson);
+                  //                  order.setConversationId(CONVERSATION_ID);
+                  //                  order.setReplyWith("order" + System.currentTimeMillis());
+                  //
+                  //                  log.info(String.format("Requested order %s", orderJson));
+                  //
+                  //                  myAgent.send(order);
+                  //                  messageTemplate =
+                  //                          MessageTemplate.and(
+                  //
+                  // MessageTemplate.MatchConversationId(CONVERSATION_ID),
+                  //
+                  // MessageTemplate.MatchInReplyTo(order.getReplyWith()));
+
+                  step = 2;
+                } else {
+                  block();
+                }
+                break;
+            }
+          }
+
+          @Override
+          public boolean done() {
+            return step == 2;
+          }
+        });
   }
 
   @Override
@@ -130,8 +121,10 @@ public class OrderAgent extends Agent {
         log.info(String.format("Add dish with id %s", dishId));
         processes.put(
             dishId,
-            MainController.addAgent(CookingProcessAgent.class, dishId, new Object[] {dish}));
+            new AID(
+                MainController.addAgent(CookingProcessAgent.class, dishId, new Object[] {dish})));
       }
     }
+    log.info(String.format("Processes %d", processes.size()));
   }
 }
