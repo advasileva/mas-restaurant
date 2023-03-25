@@ -3,6 +3,7 @@ package org.hse.bse.agents.store;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import java.util.HashMap;
@@ -11,23 +12,28 @@ import java.util.logging.Logger;
 import org.hse.bse.MainController;
 import org.hse.bse.utils.DataProvider;
 
-public class Agent extends jade.core.Agent {
+public class StoreAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private final Map<String, JsonObject> productTypes = new HashMap<>();
+
   private final Map<String, JsonObject> products = new HashMap<>();
+
   public static final String AGENT_TYPE = "store";
+
+  public static AID aid;
 
   @Override
   protected void setup() {
     log.info(String.format("Init %s", getAID().getName()));
 
+    aid = getAID();
     MainController.registerService(this, AGENT_TYPE);
 
     initProductTypes();
     initProducts();
 
-    //    addBehaviour(null); // TODO add
+    addBehaviour(new ProductDistributor(products));
   }
 
   @Override

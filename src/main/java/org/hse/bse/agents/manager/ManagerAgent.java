@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.hse.bse.MainController;
-import org.hse.bse.configuration.JadeAgent;
+import org.hse.bse.agents.store.StoreAgent;
+import org.hse.bse.agents.visitor.VisitorAgent;
 import org.hse.bse.utils.Data;
 import org.hse.bse.utils.DataProvider;
 
-@JadeAgent(number = 1)
-public class Agent extends jade.core.Agent {
+public class ManagerAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private final Map<String, String> visitors = new HashMap<>();
@@ -34,7 +34,7 @@ public class Agent extends jade.core.Agent {
     initAgents();
 
     addBehaviour(new MenuProvider());
-    addBehaviour(new OrderManager());
+    addBehaviour(new OrderCreator());
   }
 
   @Override
@@ -61,14 +61,13 @@ public class Agent extends jade.core.Agent {
       log.info(String.format("Add visitor with name %s", visitorName));
       visitors.put(
           visitorName,
-          MainController.addAgent(
-              org.hse.bse.agents.visitor.Agent.class, visitorName, new Object[] {order}));
+          MainController.addAgent(VisitorAgent.class, visitorName, new Object[] {order}));
     }
   }
 
   private void initStore() {
     MainController.addAgent(
-        org.hse.bse.agents.store.Agent.class,
+        StoreAgent.class,
         "",
         new Object[] {
           DataProvider.read(Data.productTypes), DataProvider.read(Data.products),

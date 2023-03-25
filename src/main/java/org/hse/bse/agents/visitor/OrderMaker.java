@@ -6,14 +6,18 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.logging.Logger;
-import org.hse.bse.agents.manager.Agent;
+import org.hse.bse.agents.manager.ManagerAgent;
 import org.hse.bse.utils.DataProvider;
 
 public class OrderMaker extends Behaviour {
   private final Logger log = Logger.getLogger(this.getClass().getName());
+
   private MessageTemplate messageTemplate;
+
   private int step = 0;
+
   private static final String CONVERSATION_ID = "order";
+
   private final Object[] args;
 
   public OrderMaker(Object[] args) {
@@ -25,7 +29,7 @@ public class OrderMaker extends Behaviour {
     switch (step) {
       case 0:
         ACLMessage cfpMessage = new ACLMessage(ACLMessage.CFP);
-        cfpMessage.addReceiver(Agent.aid);
+        cfpMessage.addReceiver(ManagerAgent.aid);
         cfpMessage.setConversationId(CONVERSATION_ID);
         cfpMessage.setReplyWith("cfp" + System.currentTimeMillis());
 
@@ -49,7 +53,7 @@ public class OrderMaker extends Behaviour {
 
           ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 
-          order.addReceiver(Agent.aid);
+          order.addReceiver(ManagerAgent.aid);
           order.setContent(orderJson);
           order.setConversationId(CONVERSATION_ID);
           order.setReplyWith("order" + System.currentTimeMillis());
@@ -68,7 +72,7 @@ public class OrderMaker extends Behaviour {
         }
         break;
 
-      case 2:
+      case 2: // TODO переделать на тикер бехавиор, чтобы чекать постоянно
         MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
         ACLMessage msg = myAgent.receive(messageTemplate);
 

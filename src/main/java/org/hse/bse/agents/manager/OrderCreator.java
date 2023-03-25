@@ -5,11 +5,13 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.logging.Logger;
 import org.hse.bse.MainController;
-import org.hse.bse.agents.order.Agent;
+import org.hse.bse.agents.order.OrderAgent;
 import org.hse.bse.utils.DataProvider;
 
-public class OrderManager extends CyclicBehaviour {
+public class OrderCreator extends CyclicBehaviour {
   private final Logger log = Logger.getLogger(this.getClass().getName());
+
+  private static final String CONVERSATION_ID = "order-manager";
 
   @Override
   public void action() {
@@ -23,13 +25,12 @@ public class OrderManager extends CyclicBehaviour {
 
       log.info(String.format("Received order: %s", order));
 
-      myAgent.send(reply);
+      myAgent.send(reply); // Мы приняли заказ, но не обещаем исполнить
 
-      // Добавить получение продуктов на складе, иначе не создавать заказ
+      String id = DataProvider.parse(order).get("vis_name").getAsString(); // TODO this is not id
+      MainController.addAgent(
+          OrderAgent.class, id, new Object[] {order, msg.getSender().getName()});
 
-      String id =
-          DataProvider.parse(order).get("vis_ord_total").getAsString(); // TODO this is not id
-      MainController.addAgent(Agent.class, id, new Object[] {order, msg.getSender().getName()});
     } else {
       block();
     }

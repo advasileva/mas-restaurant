@@ -10,12 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.hse.bse.MainController;
+import org.hse.bse.agents.process.ProcessAgent;
 import org.hse.bse.utils.DataProvider;
 
-public class Agent extends jade.core.Agent {
+public class OrderAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private final Map<String, AID> processes = new HashMap<>();
+
   public static final String AGENT_TYPE = "order";
 
   @Override
@@ -48,9 +50,7 @@ public class Agent extends jade.core.Agent {
       log.info(String.format("Add dish with id %s", dishId));
       processes.put(
           dishId,
-          new AID(
-              MainController.addAgent(
-                  org.hse.bse.agents.process.Agent.class, dishId, new Object[] {dish})));
+          new AID(MainController.addAgent(ProcessAgent.class, dishId, new Object[] {dish})));
     }
   }
 }

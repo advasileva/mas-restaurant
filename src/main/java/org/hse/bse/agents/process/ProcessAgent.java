@@ -12,8 +12,9 @@ import jade.lang.acl.MessageTemplate;
 import java.util.Random;
 import java.util.logging.Logger;
 
-public class Agent extends jade.core.Agent {
+public class ProcessAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
+
   private boolean used = true;
 
   public static final String AGENT_TYPE = "process";

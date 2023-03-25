@@ -6,6 +6,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.Map;
 import java.util.logging.Logger;
+import org.hse.bse.agents.store.StoreAgent;
 
 public class OrderPerformer extends Behaviour {
   private final Logger log = Logger.getLogger(this.getClass().getName());
@@ -34,6 +35,39 @@ public class OrderPerformer extends Behaviour {
     switch (step) {
       case 0:
         ACLMessage cfpMessage = new ACLMessage(ACLMessage.CFP);
+        cfpMessage.addReceiver(StoreAgent.aid);
+        cfpMessage.setConversationId(CONVERSATION_ID);
+        cfpMessage.setContent(args[0].toString());
+        cfpMessage.setReplyWith("cfp" + System.currentTimeMillis());
+
+        myAgent.send(cfpMessage);
+        messageTemplate =
+            MessageTemplate.and(
+                MessageTemplate.MatchConversationId(CONVERSATION_ID),
+                MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
+
+        log.info("Requested products");
+        step = 1;
+        break;
+      case 1:
+        ACLMessage reply = myAgent.receive(messageTemplate);
+        if (reply != null) {
+          log.info(String.format("Info from store: %s", reply.getContent()));
+
+          if (reply.getContent().contentEquals("available")) {
+            log.info("Products are available in store");
+            step = 2;
+          } else {
+            log.info("There are not enough products. Order cancelled");
+            step = 4;
+          }
+
+        } else {
+          block();
+        }
+        break;
+      case 2:
+        cfpMessage = new ACLMessage(ACLMessage.CFP);
         for (AID process : processes.values()) {
           cfpMessage.addReceiver(process);
         }
@@ -47,10 +81,10 @@ public class OrderPerformer extends Behaviour {
                 MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
 
         log.info("Requested time");
-        step = 1;
+        step = 3;
         break;
-      case 1:
-        ACLMessage reply = myAgent.receive(messageTemplate);
+      case 3:
+        reply = myAgent.receive(messageTemplate);
         if (reply != null) {
           String time = reply.getContent();
           log.info(String.format("Got time %s for process %s", time, reply.getSender().getName()));
@@ -67,7 +101,7 @@ public class OrderPerformer extends Behaviour {
 
             myAgent.send(cfpTimeMessage);
 
-            step = 3;
+            step = 4;
           }
         } else {
           block();
@@ -78,6 +112,6 @@ public class OrderPerformer extends Behaviour {
 
   @Override
   public boolean done() {
-    return step == 2;
+    return step == 4;
   }
 }
