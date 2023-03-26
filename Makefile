@@ -1,4 +1,4 @@
-google-formater = find . -type f -name '*.java' | xargs java -jar libs/formatter.jar
+google-formater = find . -type f -name '*.java' | xargs java -jar libs/formatter.jar --aosp
 
 format:
 	${google-formater} -i

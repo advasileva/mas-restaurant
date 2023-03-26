@@ -5,32 +5,36 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import org.hse.bse.MainController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ProcessAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
   public static final String AGENT_TYPE = "process";
 
-  public static AID aid;
+    private final Map<String, String> visitors = new HashMap<>();
 
-  @Override
-  protected void setup() {
-    log.info(String.format("Init %s", getAID().getName()));
+    public static AID aid;
 
-    aid = getAID();
-    MainController.registerService(this, AGENT_TYPE);
+    @Override
+    protected void setup() {
+        log.info(String.format("Init %s", getAID().getName()));
 
-    addBehaviour(new CreateDishBehaviour());
-  }
+        aid = getAID();
+        MainController.registerService(this, AGENT_TYPE);
 
-  @Override
-  protected void takeDown() {
-    try {
-      DFService.deregister(this);
-    } catch (FIPAException fe) {
-      fe.printStackTrace();
+        addBehaviour(new CreateDishBehaviour());
     }
 
-    log.info("Terminate process: " + getAID().getName());
-  }
+    @Override
+    protected void takeDown() {
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException fe) {
+            fe.printStackTrace();
+        }
+
+        log.info("Terminate process: " + getAID().getName());
+    }
 }
