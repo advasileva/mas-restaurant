@@ -1,7 +1,9 @@
 package org.hse.bse.agents.process;
 
 import com.google.gson.JsonElement;
+
 import jade.core.behaviours.OneShotBehaviour;
+
 import org.hse.bse.MainController;
 import org.hse.bse.agents.manager.ManagerAgent;
 import org.hse.bse.agents.operation.OperationAgent;
@@ -23,12 +25,14 @@ public class CreateDishBehaviour extends OneShotBehaviour {
     public void action() {
         List<String> keys = new ArrayList<String>(ManagerAgent.dishes.keySet());
         Collections.sort(keys, new LengthComparator());
-        for (String key: keys) {
+        for (String key : keys) {
             if (getAgent().getAID().getName().contains(key)) {
-                for (JsonElement je : ManagerAgent.dishes.get(key).get("operations").getAsJsonArray()) {
-                    MainController.addAgent(OperationAgent.class,
+                for (JsonElement je :
+                        ManagerAgent.dishes.get(key).get("operations").getAsJsonArray()) {
+                    MainController.addAgent(
+                            OperationAgent.class,
                             je.getAsJsonObject().get("equip_type").toString(),
-                            new Object[]{});
+                            new Object[] {});
                 }
                 break;
             }
