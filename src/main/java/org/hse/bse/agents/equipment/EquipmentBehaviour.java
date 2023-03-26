@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 public class EquipmentBehaviour extends CyclicBehaviour {
-  private LocalDateTime freeTime = LocalDateTime.now();
-  private final Logger log = Logger.getLogger(this.getClass().getName());
+    private LocalDateTime freeTime = LocalDateTime.now();
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private Integer getSleepingTime(String title) {
     return (int)(Double.parseDouble(title) * 60);
@@ -31,5 +31,4 @@ public class EquipmentBehaviour extends CyclicBehaviour {
       ACLMessage reply = msg.createReply();
       reply.setPerformative(ACLMessage.INFORM);
     }
-  }
 }

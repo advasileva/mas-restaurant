@@ -25,12 +25,13 @@ public class ManagerAgent extends jade.core.Agent {
     public static final String AGENT_TYPE = "manager";
 
     public static AID aid;
-  private final Map<String, String> visitors = new HashMap<>();
-  public static final Map<String, String> equipments = new HashMap<>();
-  public static final Map<String, String> cookers = new HashMap<>();
-  public static final Map<String, JsonObject> dishes = new HashMap<>();
-  public static final Map<String, Integer> waitingTime = new HashMap<>();
-  public static final Map<String, String> usedEquipment = new HashMap<>();
+    private final Map<String, String> visitors = new HashMap<>();
+    public static final Map<String, String> equipments = new HashMap<>();
+    public static final Map<String, String> cookers = new HashMap<>();
+    public static final Map<String, JsonObject> dishes = new HashMap<>();
+    public static final Map<String, Integer> waitingTime = new HashMap<>();
+    public static final Map<String, String> usedEquipment = new HashMap<>();
+
     @Override
     protected void setup() {
         log.info(String.format("Init %s", getAID().getName()));
@@ -75,25 +76,26 @@ public class ManagerAgent extends jade.core.Agent {
         }
     }
 
-  private void initStore() {
-    MainController.addAgent(
-        StoreAgent.class,
-        "",
-        new Object[] {
-          DataProvider.read(Data.productTypes), DataProvider.read(Data.products),
-        });
-  }
-
-  void initEquipment() {
-    JsonArray equipment =
-        DataProvider.readAsJson(Data.equipmentType).getAsJsonArray("equipment_type");
-    for (JsonElement equip : equipment) {
-        String equipName = ((JsonObject) equip).get("equip_type_id").getAsString();
-        log.info(String.format("Add equipment with id %s", equipName));
-        equipments.put(
-                equipName,
-                MainController.addAgent(EquipmentAgent.class, equipName, new Object[]{equip}));
+    private void initStore() {
+        MainController.addAgent(
+                StoreAgent.class,
+                "",
+                new Object[] {
+                    DataProvider.readAsString(Data.productTypes),
+                    DataProvider.readAsString(Data.products),
+                });
     }
+
+    void initEquipment() {
+        JsonArray equipment =
+                DataProvider.readAsJson(Data.equipmentType).getAsJsonArray("equipment_type");
+        for (JsonElement equip : equipment) {
+            String equipName = ((JsonObject) equip).get("equip_type_id").getAsString();
+            log.info(String.format("Add equipment with id %s", equipName));
+            equipments.put(
+                    equipName,
+                    MainController.addAgent(EquipmentAgent.class, equipName, new Object[] {equip}));
+        }
     }
 
     private void initCookers() {
@@ -107,18 +109,18 @@ public class ManagerAgent extends jade.core.Agent {
         }
     }
 
-  private void readDishes() {
-      JsonArray dishCards = DataProvider.readAsJson(Data.dishCards).getAsJsonArray("dish_cards");
-      for (JsonElement dish : dishCards) {
-          String dishName = ((JsonObject) dish).get("dish_name").getAsString();
-          dishes.put(dishName, dish.getAsJsonObject());
-          for (JsonElement je : ((JsonObject) dish).get("operations").getAsJsonArray()) {
-              String oper_id = ((JsonObject) je).get("oper_type").getAsString();
-              Integer time = (int) (((JsonObject) je).get("oper_time").getAsDouble() * 60);
-              String eqType = ((JsonObject) je).get("equip_type").getAsString();
-              waitingTime.put(oper_id, time);
-              usedEquipment.put(oper_id, eqType);
-          }
-      }
-  }
+    private void readDishes() {
+        JsonArray dishCards = DataProvider.readAsJson(Data.dishCards).getAsJsonArray("dish_cards");
+        for (JsonElement dish : dishCards) {
+            String dishName = ((JsonObject) dish).get("dish_name").getAsString();
+            dishes.put(dishName, dish.getAsJsonObject());
+            for (JsonElement je : ((JsonObject) dish).get("operations").getAsJsonArray()) {
+                String oper_id = ((JsonObject) je).get("oper_type").getAsString();
+                Integer time = (int) (((JsonObject) je).get("oper_time").getAsDouble() * 60);
+                String eqType = ((JsonObject) je).get("equip_type").getAsString();
+                waitingTime.put(oper_id, time);
+                usedEquipment.put(oper_id, eqType);
+            }
+        }
+    }
 }

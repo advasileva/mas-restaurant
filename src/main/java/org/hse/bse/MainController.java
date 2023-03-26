@@ -12,6 +12,8 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 import org.hse.bse.agents.manager.ManagerAgent;
+import org.hse.bse.utils.Data;
+import org.hse.bse.utils.DataProvider;
 
 import java.text.MessageFormat;
 import java.util.UUID;
@@ -29,6 +31,8 @@ public class MainController {
         p.setParameter(Profile.GUI, "true");
 
         containerController = rt.createMainContainer(p);
+
+        DataProvider.write(Data.errors, "");
     }
 
     void start() {

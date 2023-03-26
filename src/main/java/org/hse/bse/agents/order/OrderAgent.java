@@ -56,7 +56,7 @@ public class OrderAgent extends jade.core.Agent {
                     dishId,
                     new AID(
                             MainController.addAgent(
-                                        OperationAgent.class, dishId, new Object[] {dish})));
+                                    OperationAgent.class, dishId, new Object[] {dish})));
         }
     }
 }
