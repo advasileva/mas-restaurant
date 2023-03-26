@@ -32,7 +32,7 @@ public class MainController {
 
         containerController = rt.createMainContainer(p);
 
-        DataProvider.write(Data.errors, "");
+        DataProvider.write(Data.errors, "{}");
     }
 
     void start() {

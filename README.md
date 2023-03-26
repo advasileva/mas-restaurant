@@ -42,10 +42,6 @@ The output data is located in the directory `src/main/resources/output`.
 
 All files are listed in `Data` enum.
 
-### Patterns
-
-TBA
-
 ## Usage
 
 To run project (with existing `restaurant.jar`):
