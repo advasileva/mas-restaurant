@@ -22,13 +22,12 @@ public class OperationInitBehaviour extends OneShotBehaviour {
   @Override
   public void action() {
     LocalDateTime begin = LocalDateTime.now();
-    List<String> keys = new ArrayList<String>(ManagerAgent.equipments.keySet());
+    List<String> keys = new ArrayList<String>(ManagerAgent.usedEquipment.keySet());
     Collections.sort(keys, new OperationInitBehaviour.LengthComparator());
     for (String key: keys) {
-      if (getAgent().getAID().getName().contains(ManagerAgent.usedEquipment.get(key) + "_")) {
-        System.out.println("invoked " + ManagerAgent.equipments.get(key));
+      if (getAgent().getAID().getName().contains(key + "_")) {
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-        msg.setContent("using");
+        msg.setContent(ManagerAgent.waitingTime.get(key).toString());
         msg.addReceiver(new AID(ManagerAgent.equipments.get(ManagerAgent.usedEquipment.get(key))));
         getAgent().send(msg);
         break;

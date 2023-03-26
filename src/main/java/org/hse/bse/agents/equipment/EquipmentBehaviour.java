@@ -20,15 +20,14 @@ public class EquipmentBehaviour extends CyclicBehaviour {
     MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
     ACLMessage msg = myAgent.receive(messageTemplate);
     if (msg != null) {
-      System.out.println("received message");
       String title = msg.getContent();
       if (LocalDateTime.now().compareTo(freeTime) > 0) {
         freeTime = LocalDateTime.now();
       }
       freeTime = freeTime.plusSeconds(getSleepingTime(title));
-      System.out.println("started waiting");
+      log.info(getAgent().getAID().getName() + " reserved");
       while (LocalDateTime.now().compareTo(freeTime) < 0);
-      System.out.println("finished waiting");
+      log.info(getAgent().getAID().getName() + " now is not reserved");
       ACLMessage reply = msg.createReply();
       reply.setPerformative(ACLMessage.INFORM);
     }
