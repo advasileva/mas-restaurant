@@ -2,6 +2,8 @@
 
 Igor Melnikov && Alena Vasileva, BSE218
 
+# Раз уж на то пошло, то поставьте звёздочку на курсач плиз https://github.com/objectionary/speco 
+
 ## How it works
 
 The program has one instance of agents `ManagerAgent` and `StoreAgent` for each.
