@@ -3,9 +3,8 @@ package org.hse.bse.agents.process;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-import org.hse.bse.MainController;
-
 import java.util.logging.Logger;
+import org.hse.bse.MainController;
 
 public class ProcessAgent extends jade.core.Agent {
   private int chef_type_id;
