@@ -1,4 +1,4 @@
-package org.hse.bse.agents.proces;
+package org.hse.bse.agents.process;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;

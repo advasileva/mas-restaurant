@@ -1,4 +1,4 @@
-package org.hse.bse.agents.proces;
+package org.hse.bse.agents.process;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

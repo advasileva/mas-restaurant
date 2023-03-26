@@ -1,4 +1,4 @@
-package org.hse.bse.agents.proces;
+package org.hse.bse.agents.process;
 
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;

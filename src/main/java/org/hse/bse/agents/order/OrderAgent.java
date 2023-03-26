@@ -9,7 +9,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 
 import org.hse.bse.MainController;
-import org.hse.bse.agents.proces.ProcessAgent;
+import org.hse.bse.agents.process.ProcessAgent;
 import org.hse.bse.utils.DataProvider;
 
 import java.util.HashMap;
