@@ -1,6 +1,7 @@
 package org.hse.bse;
 
-import jade.core.*;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -9,8 +10,10 @@ import jade.domain.FIPAException;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import java.text.MessageFormat;
 import org.hse.bse.agents.manager.ManagerAgent;
+
+import java.text.MessageFormat;
+import java.util.UUID;
 
 public class MainController {
 
@@ -35,7 +38,7 @@ public class MainController {
     try {
       AgentController agent =
           containerController.createNewAgent(
-              MessageFormat.format("{0}{1}", clazz.getSimpleName(), suffix), clazz.getName(), args);
+              MessageFormat.format("{0}{1}_{2}", clazz.getSimpleName(), suffix, UUID.randomUUID()), clazz.getName(), args);
       agent.start();
       return agent.getName();
     } catch (StaleProxyException ex) {

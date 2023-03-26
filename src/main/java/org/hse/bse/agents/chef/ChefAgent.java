@@ -3,12 +3,11 @@ package org.hse.bse.agents.chef;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-import java.util.logging.Logger;
 import org.hse.bse.MainController;
 
+import java.util.logging.Logger;
+
 public class ChefAgent extends jade.core.Agent {
-  private int chef_type_id;
-  private String chef_type_name;
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   public static final String AGENT_TYPE = "chef";
