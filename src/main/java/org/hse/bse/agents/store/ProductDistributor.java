@@ -71,7 +71,7 @@ public class ProductDistributor extends CyclicBehaviour {
     for (JsonElement dish : dishes) {
       JsonArray operations =
           operationsByDish.get(String.valueOf(dish.getAsJsonObject().get("menu_dish").getAsInt()));
-      for (JsonElement operation : operations) {
+      for (JsonElement operation : operations) { // TODO There is bug for same dishes in order
         for (JsonElement product :
             operation.getAsJsonObject().get("oper_products").getAsJsonArray()) {
           if (product.getAsJsonObject().get("prod_quantity").getAsDouble()
