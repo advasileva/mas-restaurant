@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 public class OrderCreator extends CyclicBehaviour {
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
-    private static final String CONVERSATION_ID = "order-manager";
-
     @Override
     public void action() {
         MessageTemplate messageTemplate =

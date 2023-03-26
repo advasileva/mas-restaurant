@@ -9,8 +9,6 @@ import org.hse.bse.MainController;
 import java.util.logging.Logger;
 
 public class EquipmentAgent extends jade.core.Agent {
-    private int equip_type_id;
-    private String equip_type_name;
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
 

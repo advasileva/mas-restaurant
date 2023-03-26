@@ -85,7 +85,8 @@ public class ProcessAgent extends jade.core.Agent {
             String opId = operation.getAsJsonObject().get("oper_type").getAsString();
             log.info(String.format("Add operation with id %s", opId));
             String opUuid = UUID.randomUUID().toString();
-            MainController.addAgent(OperationAgent.class, opId, new Object[] {operation, opUuid, uuid});
+            MainController.addAgent(
+                    OperationAgent.class, opId, new Object[] {operation, opUuid, uuid});
             JsonObject op = new JsonObject();
             op.addProperty("proc_oper", opUuid);
             operations.add(op);
