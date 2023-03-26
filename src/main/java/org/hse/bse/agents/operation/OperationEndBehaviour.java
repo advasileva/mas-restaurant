@@ -1,11 +1,11 @@
-package org.hse.bse.agents.process;
+package org.hse.bse.agents.operation;
 
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.Random;
 
-public class ProcessEndBehaviour extends CyclicBehaviour {
+public class OperationEndBehaviour extends CyclicBehaviour {
   @Override
   public void action() {
     MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);

@@ -1,10 +1,10 @@
-package org.hse.bse.agents.process;
+package org.hse.bse.agents.operation;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class ProcessInitBehaviour extends OneShotBehaviour {
+public class OperationInitBehaviour extends OneShotBehaviour {
   @Override
   public void action() {
     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);

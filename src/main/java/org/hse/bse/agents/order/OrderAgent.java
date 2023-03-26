@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.hse.bse.MainController;
-import org.hse.bse.agents.process.ProcessAgent;
+import org.hse.bse.agents.operation.OperationAgent;
 import org.hse.bse.utils.DataProvider;
 
 public class OrderAgent extends jade.core.Agent {
@@ -50,7 +50,7 @@ public class OrderAgent extends jade.core.Agent {
       log.info(String.format("Add dish with id %s", dishId));
       processes.put(
           dishId,
-          new AID(MainController.addAgent(ProcessAgent.class, dishId, new Object[] {dish})));
+          new AID(MainController.addAgent(OperationAgent.class, dishId, new Object[] {dish})));
     }
   }
 }

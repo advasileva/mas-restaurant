@@ -5,18 +5,16 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import org.hse.bse.MainController;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class OperationAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
-  private final Map<String, String> visitors = new HashMap<>();
-
   public static final String AGENT_TYPE = "operation";
 
   public static AID aid;
+
+  private boolean used = true;
 
   @Override
   protected void setup() {
@@ -25,7 +23,10 @@ public class OperationAgent extends jade.core.Agent {
     aid = getAID();
     MainController.registerService(this, AGENT_TYPE);
 
-    addBehaviour(new CreateDishBehaviour());
+    addBehaviour(new OperationInitBehaviour());
+
+    addBehaviour(new OperationEndBehaviour());
+
   }
 
   @Override
@@ -36,6 +37,6 @@ public class OperationAgent extends jade.core.Agent {
       fe.printStackTrace();
     }
 
-    log.info("Terminate operation: " + getAID().getName());
+    log.info("Terminate cooking process: " + getAID().getName());
   }
 }
