@@ -2,8 +2,6 @@
 
 Igor Melnikov && Alena Vasileva, BSE218
 
-# Раз уж на то пошло, то поставьте звёздочку на курсач плиз https://github.com/objectionary/speco 
-
 ## How it works
 
 The program has one instance of agents `ManagerAgent` and `StoreAgent` for each.
@@ -25,7 +23,13 @@ For example, you can run the program several times and look at the order of logs
 
 ### Order awaiting
 
-TBA
+Implemented via `TickerBehaviour` of `OrderAgent`, 
+which informs the visitor of the remaining time every 3 seconds before the end of the order.
+
+To do this, `OrderAgent` addresses all `ProcessAgent`'s responsible for ordering dishes 
+and returns the maximum result obtained.
+
+When the order is issued, the requests are not executed.
 
 ### Input and Output
 
