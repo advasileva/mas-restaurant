@@ -31,7 +31,7 @@ public class CreateDishBehaviour extends OneShotBehaviour {
                         ManagerAgent.dishes.get(key).get("operations").getAsJsonArray()) {
                     MainController.addAgent(
                             OperationAgent.class,
-                            je.getAsJsonObject().get("equip_type").toString(),
+                            je.getAsJsonObject().get("oper_type").toString(),
                             new Object[] {});
                 }
                 break;

@@ -24,15 +24,13 @@ public class OperationInitBehaviour extends OneShotBehaviour {
     LocalDateTime begin = LocalDateTime.now();
     List<String> keys = new ArrayList<String>(ManagerAgent.equipments.keySet());
     Collections.sort(keys, new OperationInitBehaviour.LengthComparator());
-    String usedEquipmentId;
     for (String key: keys) {
-      if (getAgent().getAID().getName().contains(key.toString() + "_")) {
+      if (getAgent().getAID().getName().contains(ManagerAgent.usedEquipment.get(key) + "_")) {
         System.out.println("invoked " + ManagerAgent.equipments.get(key));
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
         msg.setContent("using");
-        msg.addReceiver(new AID(ManagerAgent.equipments.get(key)));
+        msg.addReceiver(new AID(ManagerAgent.equipments.get(ManagerAgent.usedEquipment.get(key))));
         getAgent().send(msg);
-        usedEquipmentId = key;
         break;
       }
     }
