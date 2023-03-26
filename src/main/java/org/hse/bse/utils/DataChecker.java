@@ -57,7 +57,7 @@ public class DataChecker {
             errors.add(error);
             JsonObject wrap = new JsonObject();
             wrap.add("errors", errors);
-            DataProvider.write(Data.errors, wrap.toString());
+            DataProvider.writeJson(Data.errors, wrap);
         }
     }
 

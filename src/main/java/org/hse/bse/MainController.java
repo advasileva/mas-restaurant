@@ -1,5 +1,7 @@
 package org.hse.bse;
 
+import com.google.gson.JsonObject;
+
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -32,7 +34,7 @@ public class MainController {
 
         containerController = rt.createMainContainer(p);
 
-        DataProvider.write(Data.errors, "{}");
+        DataProvider.writeJson(Data.errors, new JsonObject());
     }
 
     void start() {

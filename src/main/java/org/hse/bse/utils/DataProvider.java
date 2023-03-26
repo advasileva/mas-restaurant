@@ -1,5 +1,7 @@
 package org.hse.bse.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -30,10 +32,12 @@ public class DataProvider {
         return JsonParser.parseString(content).getAsJsonObject();
     }
 
-    public static void write(Data data, String content) {
+    public static void writeJson(Data data, JsonObject json) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
             Files.write(
-                    resources.resolve("output").resolve(data.getFilename()), content.getBytes());
+                    resources.resolve("output").resolve(data.getFilename()),
+                    gson.toJson(json).getBytes());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

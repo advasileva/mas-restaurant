@@ -1,1 +1,9 @@
-{}
+{
+  "errors": [
+    {
+      "err_type": "input_error",
+      "err_entity": "products.json",
+      "err_field": "prod_item_id"
+    }
+  ]
+}
