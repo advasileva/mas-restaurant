@@ -11,7 +11,8 @@ public enum Data {
     processLog("process_log.json"),
     productTypes("product_types.json"),
     products("products.json"),
-    visitorsOrders("visitors_orders.json");
+    visitorsOrders("visitors_orders.json"),
+    errors("errors.json");
 
     private String filename;
 

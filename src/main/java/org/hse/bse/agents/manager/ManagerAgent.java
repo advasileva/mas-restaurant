@@ -75,14 +75,14 @@ public class ManagerAgent extends jade.core.Agent {
         }
     }
 
-  private void initStore() {
-    MainController.addAgent(
-        StoreAgent.class,
-        "",
-        new Object[] {
-          DataProvider.read(Data.productTypes), DataProvider.read(Data.products),
-        });
-  }
+    private void initStore() {
+        MainController.addAgent(
+                StoreAgent.class,
+                "",
+                new Object[] {
+                    DataProvider.readAsString(Data.productTypes), DataProvider.readAsString(Data.products),
+                });
+    }
 
   void initEquipment() {
     JsonArray equipment =

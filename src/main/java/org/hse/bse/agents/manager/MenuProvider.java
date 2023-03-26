@@ -16,7 +16,7 @@ public class MenuProvider extends CyclicBehaviour {
         if (msg != null) {
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
-            reply.setContent(DataProvider.read(Data.menuDishes));
+            reply.setContent(DataProvider.readAsString(Data.menuDishes));
 
             myAgent.send(reply);
         } else {
