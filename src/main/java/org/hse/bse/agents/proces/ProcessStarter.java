@@ -35,28 +35,5 @@ public class ProcessStarter extends OneShotBehaviour {
                 break;
             }
         }
-
-        /*OperationLog.operation_log.add(new OperationLogEntity(
-                1, 1, begin, Integer.getInteger(usedEquipmentId),
-        )*/
-
-        /*try {
-          Thread.sleep(50);
-        } catch (InterruptedException ignored) { }*/
-
-        /*for (String key: keys) {
-          if (getAgent().getAID().getName().contains(key.toString() + "_")) {
-            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-            msg.setContent("not using");
-            msg.addReceiver(new AID(ManagerAgent.equipments.get(key), AID.ISLOCALNAME));
-            getAgent().send(msg);
-            break;
-          }
-        }*/
-
-        /*ACLMessage msg2 = new ACLMessage(ACLMessage.INFORM);
-        msg2.setContent("using");
-        msg2.addReceiver(new AID("knife", AID.ISLOCALNAME));
-        getAgent().send(msg2);*/
     }
 }

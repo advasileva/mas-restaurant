@@ -28,8 +28,7 @@ public class OrderCreator extends CyclicBehaviour {
 
             myAgent.send(reply);
 
-            String id =
-                    DataProvider.parse(order).get("vis_name").getAsString(); // TODO this is not id
+            String id = DataProvider.parse(order).get("vis_name").getAsString();
             MainController.addAgent(
                     OrderAgent.class, id, new Object[] {order, msg.getSender().getName()});
 
