@@ -33,7 +33,14 @@ When the order is issued, the requests are not executed.
 
 ### Input and Output
 
-TBA
+The input data is located in the directory `src/main/resources/input`.
+
+All accesses to them occur through the `DataProvider` class,
+which use the `DataChecker` class to check the correctness of the input data.
+
+The output data is located in the directory `src/main/resources/output`.
+
+All files are listed in `Data` enum.
 
 ### Patterns
 
