@@ -25,6 +25,8 @@ public class ManagerAgent extends jade.core.Agent {
   public static final Map<String, String> equipments = new HashMap<>();
   public static final Map<String, String> cookers = new HashMap<>();
   public static final Map<String, JsonObject> dishes = new HashMap<>();
+  public static final Map<String, Integer> waitingTime = new HashMap<>();
+  public static final Map<String, String> usedEquipment = new HashMap<>();
 
   public static final String AGENT_TYPE = "manager";
 
@@ -110,6 +112,13 @@ public class ManagerAgent extends jade.core.Agent {
     for (JsonElement dish : dishCards) {
       String dishName = ((JsonObject)dish).get("dish_name").getAsString();
       dishes.put(dishName, dish.getAsJsonObject());
+      for (JsonElement je : ((JsonObject)dish).get("operations").getAsJsonArray()) {
+        String oper_id = ((JsonObject)je).get("oper_type").getAsString();
+        Integer time = (int)(((JsonObject)je).get("oper_time").getAsDouble() * 60);
+        String eqType = ((JsonObject)je).get("equip_type").getAsString();
+        waitingTime.put(oper_id, time);
+        usedEquipment.put(oper_id, eqType);
+      }
     }
   }
 }
