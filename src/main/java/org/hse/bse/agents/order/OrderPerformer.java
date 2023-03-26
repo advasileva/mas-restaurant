@@ -17,19 +17,12 @@ public class OrderPerformer extends Behaviour {
 
     private int step = 0;
 
-    private int repliesCount = 0;
-
-    private double maxTime = 0;
-
     private static final String CONVERSATION_ID = "order-time";
 
     private final Object[] args;
 
-    private final Map<String, AID> processes;
-
-    public OrderPerformer(Object[] args, Map<String, AID> processes) {
+    public OrderPerformer(Object[] args) {
         this.args = args;
-        this.processes = processes;
     }
 
     @Override
@@ -66,55 +59,11 @@ public class OrderPerformer extends Behaviour {
                     block();
                 }
                 break;
-            case 2:
-                cfpMessage = new ACLMessage(ACLMessage.CFP);
-                for (AID process : processes.values()) {
-                    cfpMessage.addReceiver(process);
-                }
-                cfpMessage.setConversationId(CONVERSATION_ID);
-                cfpMessage.setReplyWith("cfp" + System.currentTimeMillis());
-
-                myAgent.send(cfpMessage);
-                messageTemplate =
-                        MessageTemplate.and(
-                                MessageTemplate.MatchConversationId(CONVERSATION_ID),
-                                MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
-
-                log.info("Requested time");
-                step = 3;
-                break;
-            case 3:
-                reply = myAgent.receive(messageTemplate);
-                if (reply != null) {
-                    String time = reply.getContent();
-                    log.info(
-                            String.format(
-                                    "Got time %s for process %s",
-                                    time, reply.getSender().getName()));
-
-                    ++repliesCount;
-                    maxTime = Math.max(maxTime, Double.parseDouble(time));
-
-                    if (repliesCount >= processes.size()) {
-                        ACLMessage cfpTimeMessage = new ACLMessage(ACLMessage.CFP);
-                        cfpTimeMessage.addReceiver(new AID(args[1].toString()));
-                        cfpTimeMessage.setConversationId(CONVERSATION_ID);
-                        cfpTimeMessage.setContent(String.valueOf(maxTime));
-                        cfpTimeMessage.setReplyWith("cfp" + System.currentTimeMillis());
-
-                        myAgent.send(cfpTimeMessage);
-
-                        step = 4;
-                    }
-                } else {
-                    block();
-                }
-                break;
         }
     }
 
     @Override
     public boolean done() {
-        return step == 4;
+        return step == 2;
     }
 }

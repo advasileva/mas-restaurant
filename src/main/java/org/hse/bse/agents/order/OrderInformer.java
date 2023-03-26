@@ -1,7 +1,9 @@
 package org.hse.bse.agents.order;
 
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import org.hse.bse.agents.store.StoreAgent;
@@ -9,7 +11,7 @@ import org.hse.bse.agents.store.StoreAgent;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class OrderInformer extends Behaviour { // Тикер, запрашивающий время и процесса и сообщающий пользователю
+public class OrderInformer extends TickerBehaviour {
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
     private MessageTemplate messageTemplate;
@@ -26,47 +28,19 @@ public class OrderInformer extends Behaviour { // Тикер, запрашива
 
     private final Map<String, AID> processes;
 
-    public OrderInformer(Object[] args, Map<String, AID> processes) {
+    public OrderInformer(Object[] args, Map<String, AID> processes, Agent agent) {
+        super(agent, 3000);
         this.args = args;
         this.processes = processes;
     }
 
     @Override
-    public void action() {
+    public void onTick() {
         switch (step) {
             case 0:
+                repliesCount = 0;
+                maxTime = 0;
                 ACLMessage cfpMessage = new ACLMessage(ACLMessage.CFP);
-                cfpMessage.addReceiver(StoreAgent.aid);
-                cfpMessage.setConversationId(CONVERSATION_ID);
-                cfpMessage.setContent(args[0].toString());
-                cfpMessage.setReplyWith("cfp" + System.currentTimeMillis());
-
-                myAgent.send(cfpMessage);
-                messageTemplate =
-                        MessageTemplate.and(
-                                MessageTemplate.MatchConversationId(CONVERSATION_ID),
-                                MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
-
-                log.info("Requested products");
-                step = 1;
-                break;
-            case 1:
-                ACLMessage reply = myAgent.receive(messageTemplate);
-                if (reply != null) {
-                    if (reply.getContent().contentEquals("available")) {
-                        log.info("Products are available in store");
-                        step = 2;
-                    } else {
-                        log.info("There are not enough products. Order cancelled");
-                        step = 4;
-                    }
-
-                } else {
-                    block();
-                }
-                break;
-            case 2:
-                cfpMessage = new ACLMessage(ACLMessage.CFP);
                 for (AID process : processes.values()) {
                     cfpMessage.addReceiver(process);
                 }
@@ -80,10 +54,10 @@ public class OrderInformer extends Behaviour { // Тикер, запрашива
                                 MessageTemplate.MatchInReplyTo(cfpMessage.getReplyWith()));
 
                 log.info("Requested time");
-                step = 3;
+                step = 1;
                 break;
-            case 3:
-                reply = myAgent.receive(messageTemplate);
+            case 1:
+                ACLMessage reply = myAgent.receive(messageTemplate);
                 if (reply != null) {
                     String time = reply.getContent();
                     log.info(
@@ -103,17 +77,15 @@ public class OrderInformer extends Behaviour { // Тикер, запрашива
 
                         myAgent.send(cfpTimeMessage);
 
-                        step = 4;
+                        step = 0;
+                        if (maxTime == 0) {
+                            step = 2;
+                        }
                     }
                 } else {
                     block();
                 }
                 break;
         }
-    }
-
-    @Override
-    public boolean done() {
-        return step == 4;
     }
 }

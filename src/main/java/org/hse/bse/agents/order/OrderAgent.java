@@ -31,7 +31,8 @@ public class OrderAgent extends jade.core.Agent {
 
         initProcesses();
 
-        addBehaviour(new OrderPerformer(getArguments(), processes));
+        addBehaviour(new OrderPerformer(getArguments()));
+        addBehaviour(new OrderInformer(getArguments(), processes, this));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class OrderAgent extends jade.core.Agent {
                     dishId,
                     new AID(
                             MainController.addAgent(
-                                    OperationAgent.class, dishId, new Object[] {dish})));
+                                        OperationAgent.class, dishId, new Object[] {dish})));
         }
     }
 }

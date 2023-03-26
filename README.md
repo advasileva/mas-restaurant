@@ -25,7 +25,11 @@ For example, you can run the program several times and look at the order of logs
 
 ### Order awaiting
 
-TBA
+Implemented via `TickerBehaviour` of `OrderAgent`, 
+which informs the visitor of the remaining time every 3 seconds before the end of the order.
+
+To do this, `OrderAgent` addresses all `ProcessAgent`s responsible for ordering dishes 
+and returns the maximum result obtained.
 
 ### Input and Output
 

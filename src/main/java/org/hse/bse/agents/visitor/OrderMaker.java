@@ -75,7 +75,7 @@ public class OrderMaker extends Behaviour {
                 }
                 break;
 
-            case 2: // TODO переделать на тикер бехавиор, чтобы чекать постоянно
+            case 2:
                 MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.CFP);
                 ACLMessage msg = myAgent.receive(messageTemplate);
 
@@ -84,7 +84,10 @@ public class OrderMaker extends Behaviour {
                             String.format(
                                     "Got time %s for order %s",
                                     msg.getContent(), msg.getSender().getName()));
-                    step = 3;
+                    if (Double.parseDouble(msg.getContent()) == 0) {
+                        log.info("Got order and exit");
+                        step = 3;
+                    }
                 } else {
                     block();
                 }

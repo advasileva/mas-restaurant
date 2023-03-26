@@ -15,7 +15,7 @@ public class OperationEndBehaviour extends CyclicBehaviour {
         if (msg != null) {
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
-            reply.setContent(String.valueOf(new Random().nextInt(10))); // TODO set correct time
+            reply.setContent(String.valueOf(new Random().nextInt(3))); // TODO set correct time
 
             myAgent.send(reply);
         } else {
