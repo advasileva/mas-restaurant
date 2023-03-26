@@ -52,8 +52,6 @@ public class OrderPerformer extends Behaviour {
       case 1:
         ACLMessage reply = myAgent.receive(messageTemplate);
         if (reply != null) {
-          log.info(String.format("Info from store: %s", reply.getContent()));
-
           if (reply.getContent().contentEquals("available")) {
             log.info("Products are available in store");
             step = 2;
