@@ -9,7 +9,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 
 import org.hse.bse.MainController;
-import org.hse.bse.agents.operation.OperationAgent;
+import org.hse.bse.agents.proces.ProcessAgent;
 import org.hse.bse.utils.DataProvider;
 
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class OrderAgent extends jade.core.Agent {
                     dishId,
                     new AID(
                             MainController.addAgent(
-                                    OperationAgent.class, dishId, new Object[] {dish})));
+                                    ProcessAgent.class, dishId, new Object[] {dish})));
         }
     }
 }

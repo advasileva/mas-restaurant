@@ -1,4 +1,4 @@
-package org.hse.bse.agents.operation;
+package org.hse.bse.agents.proces;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class OperationInitBehaviour extends OneShotBehaviour {
+public class ProcessStarter extends OneShotBehaviour {
     private class LengthComparator implements Comparator<String> {
         @Override
         public int compare(String s1, String s2) {
@@ -24,7 +24,7 @@ public class OperationInitBehaviour extends OneShotBehaviour {
     public void action() {
         LocalDateTime begin = LocalDateTime.now();
         List<String> keys = new ArrayList<String>(ManagerAgent.usedEquipment.keySet());
-        Collections.sort(keys, new OperationInitBehaviour.LengthComparator());
+        Collections.sort(keys, new ProcessStarter.LengthComparator());
         for (String key : keys) {
             if (getAgent().getAID().getName().contains(key + "_")) {
                 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);

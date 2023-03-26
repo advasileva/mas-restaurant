@@ -20,7 +20,7 @@ public class ProductDistributor extends CyclicBehaviour {
 
     private final Map<String, JsonObject> products;
 
-    private final Map<String, JsonArray> operationsByDish = new HashMap<>();
+    public static final Map<String, JsonArray> operationsByDish = new HashMap<>();
 
     ProductDistributor(Map<String, JsonObject> products) {
         this.products = products;
@@ -75,7 +75,7 @@ public class ProductDistributor extends CyclicBehaviour {
             JsonArray operations =
                     operationsByDish.get(
                             String.valueOf(dish.getAsJsonObject().get("menu_dish").getAsInt()));
-            for (JsonElement operation : operations) { // TODO There is bug for same dishes in order
+            for (JsonElement operation : operations) {
                 for (JsonElement product :
                         operation.getAsJsonObject().get("oper_products").getAsJsonArray()) {
                     if (product.getAsJsonObject().get("prod_quantity").getAsDouble()

@@ -10,12 +10,9 @@ import java.util.logging.Logger;
 
 public class OperationAgent extends jade.core.Agent {
     private final Logger log = Logger.getLogger(this.getClass().getName());
-
     public static final String AGENT_TYPE = "operation";
 
     public static AID aid;
-
-    private boolean used = true;
 
     @Override
     protected void setup() {
@@ -23,9 +20,6 @@ public class OperationAgent extends jade.core.Agent {
 
         aid = getAID();
         MainController.registerService(this, AGENT_TYPE);
-
-        addBehaviour(new OperationInitBehaviour());
-        addBehaviour(new OperationEndBehaviour());
     }
 
     @Override
@@ -36,6 +30,6 @@ public class OperationAgent extends jade.core.Agent {
             fe.printStackTrace();
         }
 
-        log.info("Terminate cooking process: " + getAID().getName());
+        log.info("Terminate operation: " + getAID().getName());
     }
 }
