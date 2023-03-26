@@ -3,9 +3,8 @@ package org.hse.bse.agents.equipment;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-import org.hse.bse.MainController;
-
 import java.util.logging.Logger;
+import org.hse.bse.MainController;
 
 public class EquipmentAgent extends jade.core.Agent {
   private int equip_type_id;

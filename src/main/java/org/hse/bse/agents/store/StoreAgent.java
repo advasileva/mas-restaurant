@@ -51,8 +51,8 @@ public class StoreAgent extends jade.core.Agent {
     JsonArray productTypesJson =
         DataProvider.parse(getArguments()[0].toString()).getAsJsonArray("product_types");
     for (JsonElement productType : productTypesJson) {
-      String productTypeId = ((JsonObject) productType).get("prod_type_id").getAsString();
-      productTypes.put(productTypeId, (JsonObject) productType);
+      String productTypeId = productType.getAsJsonObject().get("prod_type_id").getAsString();
+      productTypes.put(productTypeId, productType.getAsJsonObject());
     }
     log.info(String.format("Added %d product types", productTypesJson.size()));
   }
@@ -61,8 +61,8 @@ public class StoreAgent extends jade.core.Agent {
     JsonArray productJson =
         DataProvider.parse(getArguments()[1].toString()).getAsJsonArray("products");
     for (JsonElement product : productJson) {
-      String productId = ((JsonObject) product).get("prod_item_id").getAsString();
-      products.put(productId, (JsonObject) product);
+      String productId = product.getAsJsonObject().get("prod_item_type").getAsString();
+      products.put(productId, product.getAsJsonObject());
     }
     log.info(String.format("Added %d products", productJson.size()));
   }

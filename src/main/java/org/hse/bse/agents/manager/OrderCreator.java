@@ -25,7 +25,7 @@ public class OrderCreator extends CyclicBehaviour {
 
       log.info(String.format("Received order: %s", order));
 
-      myAgent.send(reply); // Мы приняли заказ, но не обещаем исполнить
+      myAgent.send(reply);
 
       String id = DataProvider.parse(order).get("vis_name").getAsString(); // TODO this is not id
       MainController.addAgent(
