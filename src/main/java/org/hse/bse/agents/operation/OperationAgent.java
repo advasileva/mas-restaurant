@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-
 import org.hse.bse.MainController;
 import org.hse.bse.utils.Data;
 import org.hse.bse.utils.DataProvider;

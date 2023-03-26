@@ -1,40 +1,8 @@
 {
   "process_log": [
     {
-      "proc_id": "7b70d07a-18d6-4c55-948e-19ea465fab91",
-      "ord_dish": "28",
-      "proc_started": "2023-03-27T01:22:59.541480",
-      "proc_acrive": "false",
-      "proc_ended": "2023-03-27T01:23:07.571064",
-      "proc_operations": [
-        {
-          "proc_oper": "c8d0ca6c-6e35-41d7-8a6c-8c360bcce5b9"
-        }
-      ]
-    },
-    {
-      "proc_id": "1e593a2d-2fc2-4ddd-a63b-6ff67fd52c6c",
-      "ord_dish": "28",
-      "proc_started": "2023-03-27T01:22:59.549445",
-      "proc_acrive": "false",
-      "proc_ended": "2023-03-27T01:23:07.590568",
-      "proc_operations": [
-        {
-          "proc_oper": "c455e8cb-eb3d-45a4-b77b-57d27ad45dca"
-        }
-      ]
-    },
-    {
-      "proc_id": "c37c97a1-656a-4005-b33e-67267fd98e29",
-      "ord_dish": "28",
-      "proc_started": "2023-03-27T01:22:59.550644",
-      "proc_acrive": "false",
-      "proc_ended": "2023-03-27T01:23:07.592687",
-      "proc_operations": [
-        {
-          "proc_oper": "c11618aa-5d09-44a6-80e1-e23f9e0aa1fe"
-        }
-      ]
+      "proc_ended": "2023-03-27T01:47:40.129839900",
+      "proc_operations": []
     }
   ]
 }
