@@ -3,7 +3,6 @@ package org.hse.bse.agents.operation;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-
 import org.hse.bse.MainController;
 
 import java.util.logging.Logger;

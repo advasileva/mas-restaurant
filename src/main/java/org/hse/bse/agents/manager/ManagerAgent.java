@@ -3,12 +3,11 @@ package org.hse.bse.agents.manager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-
 import org.hse.bse.MainController;
+import org.hse.bse.TimeMarker;
 import org.hse.bse.agents.chef.ChefAgent;
 import org.hse.bse.agents.equipment.EquipmentAgent;
 import org.hse.bse.agents.store.StoreAgent;
@@ -31,6 +30,7 @@ public class ManagerAgent extends jade.core.Agent {
   public static final Map<String, JsonObject> dishes = new HashMap<>();
   public static final Map<String, Integer> waitingTime = new HashMap<>();
   public static final Map<String, String> usedEquipment = new HashMap<>();
+
     @Override
     protected void setup() {
         log.info(String.format("Init %s", getAID().getName()));
@@ -56,6 +56,7 @@ public class ManagerAgent extends jade.core.Agent {
     }
 
     private void initAgents() {
+        TimeMarker.init();
         initVisitors();
         initStore();
         initEquipment();

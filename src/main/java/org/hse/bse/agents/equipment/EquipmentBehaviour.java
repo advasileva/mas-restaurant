@@ -3,6 +3,7 @@ package org.hse.bse.agents.equipment;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import org.hse.bse.TimeMarker;
 
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
@@ -25,6 +26,7 @@ public class EquipmentBehaviour extends CyclicBehaviour {
         freeTime = LocalDateTime.now();
       }
       freeTime = freeTime.plusSeconds(getSleepingTime(title));
+      TimeMarker.equipmentTime.put(getAgent().getAID().getName(), freeTime);
       log.info(getAgent().getAID().getName() + " reserved");
       while (LocalDateTime.now().compareTo(freeTime) < 0);
       log.info(getAgent().getAID().getName() + " now is not reserved");

@@ -1,13 +1,13 @@
 package org.hse.bse.agents.process;
 
 import com.google.gson.JsonElement;
-
 import jade.core.behaviours.OneShotBehaviour;
-
 import org.hse.bse.MainController;
+import org.hse.bse.TimeMarker;
 import org.hse.bse.agents.manager.ManagerAgent;
 import org.hse.bse.agents.operation.OperationAgent;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,14 +25,21 @@ public class CreateDishBehaviour extends OneShotBehaviour {
     public void action() {
         List<String> keys = new ArrayList<String>(ManagerAgent.dishes.keySet());
         Collections.sort(keys, new LengthComparator());
+        LocalDateTime maxTime = LocalDateTime.now();
         for (String key : keys) {
             if (getAgent().getAID().getName().contains(key)) {
                 for (JsonElement je :
                         ManagerAgent.dishes.get(key).get("operations").getAsJsonArray()) {
-                    MainController.addAgent(
+                    String name = MainController.addAgent(
                             OperationAgent.class,
                             je.getAsJsonObject().get("oper_type").toString(),
                             new Object[] {});
+                    for (String w : new ArrayList<>(TimeMarker.operationTime.keySet())) {
+                        if (maxTime.compareTo(TimeMarker.operationTime.get(w)) < 0) {
+                            maxTime = TimeMarker.operationTime.get(w);
+                        }
+                    }
+                    TimeMarker.dishTime.put(getAgent().getAID().getName(), maxTime);
                 }
                 break;
             }

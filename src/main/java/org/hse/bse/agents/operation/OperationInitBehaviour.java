@@ -3,9 +3,9 @@ package org.hse.bse.agents.operation;
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import org.hse.bse.TimeMarker;
 import org.hse.bse.agents.manager.ManagerAgent;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,7 +21,6 @@ public class OperationInitBehaviour extends OneShotBehaviour {
 
   @Override
   public void action() {
-    LocalDateTime begin = LocalDateTime.now();
     List<String> keys = new ArrayList<String>(ManagerAgent.usedEquipment.keySet());
     Collections.sort(keys, new OperationInitBehaviour.LengthComparator());
     for (String key: keys) {
@@ -30,6 +29,11 @@ public class OperationInitBehaviour extends OneShotBehaviour {
         msg.setContent(ManagerAgent.waitingTime.get(key).toString());
         msg.addReceiver(new AID(ManagerAgent.equipments.get(ManagerAgent.usedEquipment.get(key))));
         getAgent().send(msg);
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException ignored) { }
+        TimeMarker.operationTime.put(getAgent().getAID().getName(),
+                TimeMarker.equipmentTime.get(ManagerAgent.equipments.get(ManagerAgent.usedEquipment.get(key))));
         break;
       }
     }
