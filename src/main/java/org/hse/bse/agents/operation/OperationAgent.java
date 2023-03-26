@@ -26,7 +26,6 @@ public class OperationAgent extends jade.core.Agent {
     addBehaviour(new OperationInitBehaviour());
 
     addBehaviour(new OperationEndBehaviour());
-
   }
 
   @Override

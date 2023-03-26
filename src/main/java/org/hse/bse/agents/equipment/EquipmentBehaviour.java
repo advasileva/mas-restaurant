@@ -11,16 +11,17 @@ public class EquipmentBehaviour extends CyclicBehaviour {
 
   @Override
   public void action() {
-    ACLMessage msg = myAgent.receive();
+    ACLMessage msg = getAgent().receive();
     if (msg != null) {
+      System.out.println("received message");
       String title = msg.getContent();
       if (title.equals("using")) {
+        System.out.println("equipment used!");
         if (used) {
-          log.info(getAgent().getAID().getName() + " is already used!");
-        } else {
-          used = true;
-          log.info(getAgent().getAID().getName() + " reserved by " + msg.getSender().getName());
+          return;
         }
+        // used = true;
+        log.info(getAgent().getAID().getName() + " reserved by " + msg.getSender().getName());
       } else {
         used = false;
       }

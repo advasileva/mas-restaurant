@@ -87,8 +87,8 @@ public class ManagerAgent extends jade.core.Agent {
     JsonArray equipment =
         DataProvider.readAsJson(Data.equipmentType).getAsJsonArray("equipment_type");
     for (JsonElement equip : equipment) {
-      String equipName = ((JsonObject) equip).get("equip_type_name").getAsString();
-      log.info(String.format("Add equipment with name %s", equipName));
+      String equipName = ((JsonObject) equip).get("equip_type_id").getAsString();
+      log.info(String.format("Add equipment with id %s", equipName));
       equipments.put(
           equipName,
           MainController.addAgent(EquipmentAgent.class, equipName, new Object[] {equip}));
