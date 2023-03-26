@@ -21,9 +21,21 @@ Quote from the documentation: *In JADE there is a single Java thread per agent.*
 Thus, orders, processes and operations are already being executed concurrently.
 For example, you can run the program several times and look at the order of logs in the console.
 
+### Order awaiting
+
+TBA
+
+### Input and Output
+
+TBA
+
+### Patterns
+
+TBA
+
 ## Usage
 
-To run project (with existing `.jar`):
+To run project (with existing `restaurant.jar`):
 ```bash
 make run
 ```
