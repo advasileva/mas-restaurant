@@ -106,7 +106,8 @@ public class DataChecker {
                 if (result != null) {
                     return result;
                 }
-                for (JsonElement jsonElement3 : jsonElement2.getAsJsonObject().getAsJsonArray("oper_products")) {
+                for (JsonElement jsonElement3 :
+                        jsonElement2.getAsJsonObject().getAsJsonArray("oper_products")) {
                     result =
                             checkFields(
                                     jsonElement3.getAsJsonObject(),
@@ -163,7 +164,11 @@ public class DataChecker {
             String result =
                     checkFields(
                             jsonElement.getAsJsonObject(),
-                            List.of("menu_dish_id", "menu_dish_card", "menu_dish_price", "menu_dish_active"));
+                            List.of(
+                                    "menu_dish_id",
+                                    "menu_dish_card",
+                                    "menu_dish_price",
+                                    "menu_dish_active"));
             if (result != null) {
                 return result;
             }
@@ -214,7 +219,11 @@ public class DataChecker {
             String result =
                     checkFields(
                             jsonElement.getAsJsonObject(),
-                            List.of("prod_item_id", "prod_item_type", "prod_item_name", "prod_item_quantity"));
+                            List.of(
+                                    "prod_item_id",
+                                    "prod_item_type",
+                                    "prod_item_name",
+                                    "prod_item_quantity"));
             if (result != null) {
                 return result;
             }
@@ -229,7 +238,9 @@ public class DataChecker {
         }
         for (JsonElement jsonElement : content.getAsJsonArray(field)) {
             JsonObject json = jsonElement.getAsJsonObject();
-            String result = checkFields(json, List.of("vis_ord_started", "vis_ord_total", "vis_ord_dishes"));
+            String result =
+                    checkFields(
+                            json, List.of("vis_ord_started", "vis_ord_total", "vis_ord_dishes"));
             if (result != null) {
                 return result;
             }

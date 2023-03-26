@@ -26,7 +26,8 @@ public class EquipmentBehaviour extends CyclicBehaviour {
             }
             freeTime = freeTime.plusSeconds(getSleepingTime(title));
             log.info(getAgent().getAID().getName() + " reserved");
-            while (LocalDateTime.now().compareTo(freeTime) < 0) ;
+            while (LocalDateTime.now().compareTo(freeTime) < 0)
+                ;
             log.info(getAgent().getAID().getName() + " now is not reserved");
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
