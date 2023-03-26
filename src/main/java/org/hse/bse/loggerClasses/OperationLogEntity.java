@@ -14,8 +14,12 @@ public class OperationLogEntity {
 
     private static int operCounter = 0;
 
-    public OperationLogEntity(int currentOperProc, int currentOperCard,
-                              LocalDateTime started, String currentEquipID, String currentCookerID) {
+    public OperationLogEntity(
+            int currentOperProc,
+            int currentOperCard,
+            LocalDateTime started,
+            String currentEquipID,
+            String currentCookerID) {
         oper_id = operCounter++;
         oper_proc = currentOperProc;
         oper_card = currentOperCard;

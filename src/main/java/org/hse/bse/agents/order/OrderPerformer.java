@@ -1,13 +1,11 @@
 package org.hse.bse.agents.order;
 
-import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import org.hse.bse.agents.store.StoreAgent;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class OrderPerformer extends Behaviour {

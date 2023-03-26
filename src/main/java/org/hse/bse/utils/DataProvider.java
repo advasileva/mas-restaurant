@@ -16,7 +16,8 @@ public class DataProvider {
 
     public static String readAsString(Data data) {
         try {
-            String content = Files.readString(resources.resolve("input").resolve(data.getFilename()));
+            String content =
+                    Files.readString(resources.resolve("input").resolve(data.getFilename()));
             DataChecker.check(data, content);
             return content;
         } catch (IOException ex) {
@@ -26,12 +27,13 @@ public class DataProvider {
     }
 
     public static JsonObject parse(String content) {
-        return (JsonObject) new JsonParser().parse(content);
+        return JsonParser.parseString(content).getAsJsonObject();
     }
 
     public static void write(Data data, String content) {
         try {
-            Files.write(resources.resolve("output").resolve(data.getFilename()), content.getBytes());
+            Files.write(
+                    resources.resolve("output").resolve(data.getFilename()), content.getBytes());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
