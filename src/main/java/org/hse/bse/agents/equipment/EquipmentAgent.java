@@ -1,50 +1,29 @@
 package org.hse.bse.agents.equipment;
 
-import static jade.util.ObjectManager.AGENT_TYPE;
-
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.AID;
 import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.lang.acl.ACLMessage;
+import org.hse.bse.MainController;
+
+import java.util.logging.Logger;
 
 public class EquipmentAgent extends jade.core.Agent {
   private int equip_type_id;
   private String equip_type_name;
-  private boolean used = false;
+
+  private final Logger log = Logger.getLogger(this.getClass().getName());
+
+  public static final String AGENT_TYPE = "equipment";
+
+  public static AID aid;
 
   @Override
   protected void setup() {
-    DFAgentDescription agentDescription = new DFAgentDescription();
-    agentDescription.setName(getAID());
-    ServiceDescription serviceDescription = new ServiceDescription();
-    serviceDescription.setType(AGENT_TYPE);
-    serviceDescription.setName("knife");
-    agentDescription.addServices(serviceDescription);
-    System.out.println("Init equipment " + getAID().getName() + "");
-    addBehaviour(
-        new CyclicBehaviour(this) {
-          @Override
-          public void action() {
-            ACLMessage msg = myAgent.receive();
-            if (msg != null) {
-              String title = msg.getContent();
-              if (title.equals("using")) {
-                if (used) {
-                  System.out.println(getName() + " is already used!");
-                } else {
-                  used = true;
-                  System.out.println(getName() + " reserved by " + msg.getSender().getName());
-                }
-              } else {
-                used = false;
-              }
-              ACLMessage reply = msg.createReply();
-              reply.setPerformative(ACLMessage.INFORM);
-            }
-          }
-        });
+    log.info(String.format("Init %s", getAID().getName()));
+    aid = getAID();
+    MainController.registerService(this, AGENT_TYPE);
+
+    addBehaviour(new EquipmentBehaviour());
   }
 
   public void setUp() {
@@ -59,6 +38,6 @@ public class EquipmentAgent extends jade.core.Agent {
       fe.printStackTrace();
     }
 
-    System.out.println("Terminate equipment: " + getAID().getName());
+    log.info("Terminate equipment: " + getAID().getName());
   }
 }

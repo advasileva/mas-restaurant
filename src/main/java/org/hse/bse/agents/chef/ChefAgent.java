@@ -1,52 +1,29 @@
 package org.hse.bse.agents.chef;
 
-import static jade.util.ObjectManager.AGENT_TYPE;
-
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.AID;
 import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.lang.acl.ACLMessage;
+import org.hse.bse.MainController;
+
+import java.util.logging.Logger;
 
 public class ChefAgent extends jade.core.Agent {
   private int chef_type_id;
   private String chef_type_name;
-  private boolean used = false;
+  private final Logger log = Logger.getLogger(this.getClass().getName());
+
+  public static final String AGENT_TYPE = "chef";
+
+  public static AID aid;
 
   @Override
   protected void setup() {
-    DFAgentDescription agentDescription = new DFAgentDescription();
-    agentDescription.setName(getAID());
-    ServiceDescription serviceDescription = new ServiceDescription();
-    serviceDescription.setType(AGENT_TYPE);
-    serviceDescription.setName("bob");
+    log.info(String.format("Init %s", getAID().getName()));
 
-    agentDescription.addServices(serviceDescription);
+    aid = getAID();
+    MainController.registerService(this, AGENT_TYPE);
 
-    System.out.println("Init chef " + getAID().getName() + "");
-    addBehaviour(
-        new CyclicBehaviour(this) {
-          @Override
-          public void action() {
-            ACLMessage msg = myAgent.receive();
-            if (msg != null) {
-              String title = msg.getContent();
-              if (title.equals("using")) {
-                if (used) {
-                  System.out.println(getName() + " is already used!");
-                } else {
-                  used = true;
-                  System.out.println(getName() + " reserved by " + msg.getSender().getName());
-                }
-              } else {
-                used = false;
-              }
-              ACLMessage reply = msg.createReply();
-              reply.setPerformative(ACLMessage.INFORM);
-            }
-          }
-        });
+    addBehaviour(new ChefBehaviour());
   }
 
   public void setUp() {
@@ -61,6 +38,6 @@ public class ChefAgent extends jade.core.Agent {
       fe.printStackTrace();
     }
 
-    System.out.println("Terminate chef: " + getAID().getName());
+    log.info("Terminate chef: " + getAID().getName());
   }
 }

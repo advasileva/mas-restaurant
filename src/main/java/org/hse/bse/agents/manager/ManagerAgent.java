@@ -6,19 +6,24 @@ import com.google.gson.JsonObject;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
 import org.hse.bse.MainController;
+import org.hse.bse.agents.chef.ChefAgent;
+import org.hse.bse.agents.equipment.EquipmentAgent;
 import org.hse.bse.agents.store.StoreAgent;
 import org.hse.bse.agents.visitor.VisitorAgent;
 import org.hse.bse.utils.Data;
 import org.hse.bse.utils.DataProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
 public class ManagerAgent extends jade.core.Agent {
   private final Logger log = Logger.getLogger(this.getClass().getName());
 
   private final Map<String, String> visitors = new HashMap<>();
+  private final Map<String, String> equipments = new HashMap<>();
+  private final Map<String, String> cookers = new HashMap<>();
 
   public static final String AGENT_TYPE = "manager";
 
@@ -51,6 +56,8 @@ public class ManagerAgent extends jade.core.Agent {
   private void initAgents() {
     initVisitors();
     initStore();
+    initEquipment();
+    initCookers();
   }
 
   private void initVisitors() {
@@ -72,5 +79,29 @@ public class ManagerAgent extends jade.core.Agent {
         new Object[] {
           DataProvider.read(Data.productTypes), DataProvider.read(Data.products),
         });
+  }
+
+  void initEquipment() {
+    JsonArray equipment =
+            DataProvider.readAsJson(Data.equipmentType).getAsJsonArray("equipment_type");
+    for (JsonElement equip : equipment) {
+      String equipName = ((JsonObject)equip).get("equip_type_name").getAsString();
+      log.info(String.format("Add equipment with name %s", equipName));
+      equipments.put(
+              equipName,
+              MainController.addAgent(EquipmentAgent.class, equipName, new Object[] {equip}));
+    }
+  }
+
+  private void initCookers() {
+    JsonArray cookersArray =
+            DataProvider.readAsJson(Data.cookers).getAsJsonArray("cookers");
+    for (JsonElement cooker : cookersArray) {
+      String cookerName = ((JsonObject)cooker).get("cook_name").getAsString();
+      log.info(String.format("Add cooker with name %s", cookerName));
+      cookers.put(
+              cookerName,
+              MainController.addAgent(ChefAgent.class, cookerName, new Object[] {cooker}));
+    }
   }
 }

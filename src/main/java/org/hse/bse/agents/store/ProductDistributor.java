@@ -4,9 +4,10 @@ import com.google.gson.JsonObject;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import org.hse.bse.utils.DataProvider;
+
 import java.util.Map;
 import java.util.logging.Logger;
-import org.hse.bse.utils.DataProvider;
 
 public class ProductDistributor extends CyclicBehaviour {
   private final Logger log = Logger.getLogger(this.getClass().getName());
@@ -32,7 +33,7 @@ public class ProductDistributor extends CyclicBehaviour {
         reply.setContent("available");
         discard();
       } else {
-        reply.setContent("not enought");
+        reply.setContent("not enough");
       }
 
       myAgent.send(reply);
